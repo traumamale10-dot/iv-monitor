@@ -195,13 +195,14 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   </div>
 
   <!-- Mode tabs -->
-  <div class="mode-tabs">
-    <button class="mode-tab active" id="tabMetro" onclick="switchMode('metro')">🔔 คำนวณ + จังหวะเสียง</button>
-    <button class="mode-tab" id="tabCam" onclick="switchMode('cam')">📷 นับแบบเปิดกล้อง</button>
+  <div class="mode-tabs" style="grid-template-columns:1fr 1fr 1fr;">
+    <button class="mode-tab active" id="tabMetro" onclick="switchMode('metro')">🔔 จังหวะเสียง</button>
+    <button class="mode-tab" id="tabCam" onclick="switchMode('cam')">📷 เปิดกล้อง</button>
+    <button class="mode-tab" id="tabPt" onclick="switchMode('pt')">🏥 ข้อมูลผู้ป่วย</button>
   </div>
 
   <!-- ══ IV Settings (shared) ══ -->
-  <div class="panel">
+  <div class="panel shared-iv">
     <div class="panel-head"><span class="icon">💉</span><span class="htxt">ชนิด Set น้ำเกลือ</span></div>
     <div class="panel-body">
       <div class="set-grid">
@@ -212,7 +213,7 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
     </div>
   </div>
 
-  <div class="panel">
+  <div class="panel shared-iv">
     <div class="panel-head">
       <span class="icon">🧮</span><span class="htxt">คำนวณอัตราน้ำเกลือ</span>
       <div style="margin-left:auto;display:flex;align-items:center;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;">
@@ -422,6 +423,64 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 
   </div><!-- end secCam -->
 
+  <!-- ══ MODE: PATIENT ══ -->
+  <div class="section" id="secPt">
+
+    <div class="panel">
+      <div class="panel-head"><span class="icon">👤</span><span class="htxt">ข้อมูลผู้ป่วย</span></div>
+      <div class="panel-body">
+        <div class="irow"><label>ชื่อ-นามสกุล</label><input type="text" id="ptName" placeholder="ชื่อ นามสกุล" style="flex:1;height:46px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;font-size:16px;color:var(--text);outline:none;font-family:'IBM Plex Sans Thai',sans-serif;" oninput="renderPtPlan()"></div>
+        <div class="irow"><label>HN / AN</label><input type="text" id="ptHN" placeholder="เช่น 12345678" style="flex:1;height:46px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;font-size:16px;color:var(--text);outline:none;font-family:'IBM Plex Sans Thai',sans-serif;" oninput="renderPtPlan()"></div>
+        <div class="irow"><label>ห้อง / เตียง</label><input type="text" id="ptRoom" placeholder="เช่น 302/1" style="flex:1;height:46px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;font-size:16px;color:var(--text);outline:none;font-family:'IBM Plex Sans Thai',sans-serif;" oninput="renderPtPlan()"></div>
+        <div class="irow">
+          <label>วันเริ่มให้สารน้ำ</label>
+          <input type="datetime-local" id="ptStart" style="flex:1;height:46px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;font-size:15px;color:var(--text);outline:none;font-family:'IBM Plex Sans Thai',sans-serif;" oninput="renderPtPlan()">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <span class="icon">💧</span><span class="htxt">แผนการให้สารน้ำ</span>
+        <button onclick="addFluid()" style="margin-left:auto;height:30px;padding:0 12px;border-radius:7px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">+ เพิ่มสารน้ำ</button>
+      </div>
+      <div class="panel-body" id="fluidList"></div>
+    </div>
+
+    <div class="panel" id="ptSummaryPanel" style="display:none;">
+      <div class="panel-head"><span class="icon">📋</span><span class="htxt">สรุปแผนการให้สารน้ำ</span></div>
+      <div class="panel-body" id="ptSummary"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><span class="icon">🔔</span><span class="htxt">การแจ้งเตือน</span></div>
+      <div class="panel-body">
+        <div class="togrow">
+          <span class="toglabel">แจ้งเตือนล่วงหน้า 15 นาที</span>
+          <div class="tog-wrap">
+            <button class="tog on" id="togAlert15" onclick="togglePtAlert('15')"><div class="knob"></div></button>
+            <span class="tlab" id="lblAlert15">เปิด</span>
+          </div>
+        </div>
+        <div class="togrow">
+          <span class="toglabel">แจ้งเตือนล่วงหน้า 30 นาที</span>
+          <div class="tog-wrap">
+            <button class="tog on" id="togAlert30" onclick="togglePtAlert('30')"><div class="knob"></div></button>
+            <span class="tlab" id="lblAlert30">เปิด</span>
+          </div>
+        </div>
+        <div class="togrow" style="margin-bottom:0;">
+          <span class="toglabel">เสียงแจ้งเตือน</span>
+          <div class="tog-wrap">
+            <button class="tog on" id="togAlertSound" onclick="togglePtAlert('sound')"><div class="knob"></div></button>
+            <span class="tlab" id="lblAlertSound">เปิด</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end secPt -->
+
 </div><!-- end shell -->
 <script>
 // ── Global ─────────────────────────────────────────────────
@@ -432,11 +491,16 @@ var aCtx=null;
 function toggleTheme(){isDark=!isDark;document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';}
 function switchMode(m){
   currentMode=m;
-  document.getElementById('tabMetro').classList.toggle('active',m==='metro');
-  document.getElementById('tabCam').classList.toggle('active',m==='cam');
-  document.getElementById('secMetro').classList.toggle('active',m==='metro');
-  document.getElementById('secCam').classList.toggle('active',m==='cam');
-  if(m==='metro'){stopMonitor();}else{stopMetro();}
+  ['metro','cam','pt'].forEach(function(t){
+    document.getElementById('tab'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active',t===m);
+    document.getElementById('sec'+t.charAt(0).toUpperCase()+t.slice(1)).classList.toggle('active',t===m);
+  });
+  // hide shared IV panel when in patient mode
+  var shared=document.querySelectorAll('.shared-iv');
+  shared.forEach(function(el){el.style.display=m==='pt'?'none':'block';});
+  if(m==='metro'){stopMonitor();}
+  else if(m==='cam'){stopMetro();}
+  else{stopMetro();stopMonitor();}
 }
 
 // ── Audio ──────────────────────────────────────────────────
@@ -832,6 +896,175 @@ function updateVolC(){volC=+document.getElementById('sVolC').value;document.getE
 
 function updateClock(){document.getElementById('clockTxt').textContent=new Date().toLocaleTimeString('th-TH');}
 setInterval(updateClock,1000);updateClock();
+
+// ══════════════════════════════════════════════════════════
+// ── PATIENT MODE ──────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+var fluids=[]; // [{name, vol, rate, bottles}]
+var ptAlerts={a15:true,a30:true,sound:true};
+var alertTimers=[];
+var FLUID_OPTIONS=['NSS (0.9% NaCl)','5%D/NSS','5%D/W','Ringer\'s Lactate (RL)','กำหนดเอง'];
+
+function addFluid(){
+  var id='f'+Date.now();
+  fluids.push({id:id,name:'NSS (0.9% NaCl)',vol:500,rate:80,bottles:1});
+  renderFluidList();
+  renderPtPlan();
+}
+function removeFluid(id){
+  fluids=fluids.filter(function(f){return f.id!==id;});
+  renderFluidList();renderPtPlan();
+}
+function updateFluid(id,field,val){
+  fluids.forEach(function(f){if(f.id===id){f[field]=field==='name'?val:parseFloat(val)||0;}});
+  renderPtPlan();
+}
+
+function renderFluidList(){
+  var el=document.getElementById('fluidList');
+  if(fluids.length===0){
+    el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">กด "+ เพิ่มสารน้ำ" เพื่อเริ่มต้น</div>';
+    return;
+  }
+  el.innerHTML=fluids.map(function(f,i){
+    return '<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:12px;margin-bottom:10px;">'
+      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">'
+      +'<span style="font-size:13px;font-weight:600;color:var(--muted);">ขวดที่ '+(i+1)+'</span>'
+      +'<button onclick="removeFluid(\''+f.id+'\')" style="margin-left:auto;width:28px;height:28px;border-radius:7px;border:1px solid var(--red);background:var(--red-dim);color:var(--red);font-size:14px;cursor:pointer;line-height:1;">✕</button>'
+      +'</div>'
+      +'<div style="margin-bottom:8px;">'
+      +'<div style="font-size:13px;color:var(--muted);margin-bottom:4px;">ชนิดสารน้ำ</div>'
+      +'<select onchange="updateFluid(\''+f.id+'\',\'name\',this.value)" style="width:100%;height:42px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:0 10px;font-size:14px;color:var(--text);font-family:\'IBM Plex Sans Thai\',sans-serif;">'
+      +FLUID_OPTIONS.map(function(o){return '<option value="'+o+'"'+(f.name===o?' selected':'')+'>'+o+'</option>';}).join('')
+      +'</select>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">'
+      +'<div><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">ปริมาณ (mL)</div><input type="number" value="'+f.vol+'" min="50" max="2000" step="50" onchange="updateFluid(\''+f.id+'\',\'vol\',this.value)" style="width:100%;height:40px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:0 8px;font-size:15px;color:var(--text);font-family:\'IBM Plex Sans Thai\',sans-serif;"></div>'
+      +'<div><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">อัตรา (mL/ชม.)</div><input type="number" value="'+f.rate+'" min="1" max="999" onchange="updateFluid(\''+f.id+'\',\'rate\',this.value)" style="width:100%;height:40px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:0 8px;font-size:15px;color:var(--text);font-family:\'IBM Plex Sans Thai\',sans-serif;"></div>'
+      +'<div><div style="font-size:12px;color:var(--muted);margin-bottom:4px;">จำนวน (ขวด)</div><input type="number" value="'+f.bottles+'" min="1" max="20" onchange="updateFluid(\''+f.id+'\',\'bottles\',this.value)" style="width:100%;height:40px;background:var(--surface);border:1.5px solid var(--border2);border-radius:8px;padding:0 8px;font-size:15px;color:var(--text);font-family:\'IBM Plex Sans Thai\',sans-serif;"></div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderPtPlan(){
+  if(fluids.length===0){document.getElementById('ptSummaryPanel').style.display='none';return;}
+  var startVal=document.getElementById('ptStart').value;
+  var startTime=startVal?new Date(startVal):new Date();
+  var name=document.getElementById('ptName').value||'—';
+  var hn=document.getElementById('ptHN').value||'—';
+  var room=document.getElementById('ptRoom').value||'—';
+
+  // Build schedule
+  var schedule=[];
+  var cursor=new Date(startTime);
+  fluids.forEach(function(f){
+    for(var b=0;b<f.bottles;b++){
+      var hrs=f.vol/f.rate;
+      var endTime=new Date(cursor.getTime()+hrs*3600000);
+      schedule.push({name:f.name,vol:f.vol,rate:f.rate,start:new Date(cursor),end:endTime,hrs:hrs});
+      cursor=new Date(endTime);
+    }
+  });
+
+  var totalVol=schedule.reduce(function(s,x){return s+x.vol;},0);
+  var totalHrs=(cursor-startTime)/3600000;
+
+  // Header
+  var html='<div style="background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:12px;">'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">'
+    +'<div><div style="font-size:11px;color:var(--muted);">ชื่อผู้ป่วย</div><div style="font-size:15px;font-weight:600;">'+name+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">HN/AN</div><div style="font-size:15px;font-weight:600;">'+hn+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">ห้อง/เตียง</div><div style="font-size:15px;font-weight:600;">'+room+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">ปริมาณรวม</div><div style="font-size:15px;font-weight:600;">'+totalVol+' mL</div></div>'
+    +'</div>'
+    +'</div>';
+
+  // Timeline
+  html+='<div style="margin-bottom:8px;font-size:13px;font-weight:600;color:var(--muted);">ตารางการให้สารน้ำ</div>';
+  schedule.forEach(function(s,i){
+    var now=new Date();
+    var isNow=now>=s.start&&now<s.end;
+    var isDone=now>=s.end;
+    var color=isNow?'var(--green)':isDone?'var(--muted)':'var(--blue)';
+    var bg=isNow?'var(--green-dim)':isDone?'var(--surface2)':'var(--blue-dim)';
+    var status=isNow?'● กำลังให้อยู่':isDone?'✓ เสร็จแล้ว':'○ รอคิว';
+    html+='<div style="background:'+bg+';border:1px solid '+color+';border-radius:10px;padding:11px 13px;margin-bottom:8px;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">'
+      +'<span style="font-size:14px;font-weight:600;color:'+color+';">ขวดที่ '+(i+1)+' — '+s.name+'</span>'
+      +'<span style="font-size:11px;color:'+color+';">'+status+'</span>'
+      +'</div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;">'
+      +'<div><div style="font-size:10px;color:var(--muted);">ปริมาณ</div><div style="font-size:14px;font-weight:600;">'+s.vol+' mL</div></div>'
+      +'<div><div style="font-size:10px;color:var(--muted);">อัตรา</div><div style="font-size:14px;font-weight:600;">'+s.rate+' mL/ชม.</div></div>'
+      +'<div><div style="font-size:10px;color:var(--muted);">ระยะเวลา</div><div style="font-size:14px;font-weight:600;">'+s.hrs.toFixed(1)+' ชม.</div></div>'
+      +'</div>'
+      +'<div style="margin-top:6px;font-size:12px;color:var(--muted);">'
+      +'เริ่ม '+fmtTime(s.start)+' → หมด '+fmtTime(s.end)
+      +'</div>'
+      +'</div>';
+  });
+
+  // Total
+  html+='<div style="background:var(--surface2);border-radius:10px;padding:11px 13px;margin-top:4px;display:flex;justify-content:space-between;align-items:center;">'
+    +'<span style="font-size:14px;color:var(--muted);">รวมทั้งหมด</span>'
+    +'<span style="font-size:15px;font-weight:600;">'+totalVol+' mL / '+totalHrs.toFixed(1)+' ชม.</span>'
+    +'</div>';
+
+  document.getElementById('ptSummary').innerHTML=html;
+  document.getElementById('ptSummaryPanel').style.display='block';
+
+  // Set alerts
+  setupAlerts(schedule);
+}
+
+function fmtTime(d){
+  return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+' น.';
+}
+
+function setupAlerts(schedule){
+  alertTimers.forEach(clearTimeout);alertTimers=[];
+  var now=Date.now();
+  schedule.forEach(function(s,i){
+    var endMs=s.end.getTime();
+    if(endMs<=now)return;
+    if(ptAlerts.a15){
+      var t15=endMs-15*60000-now;
+      if(t15>0)alertTimers.push(setTimeout(function(){fireAlert('ขวดที่'+(i+1)+' — '+s.name+' จะหมดใน 15 นาที!');},t15));
+    }
+    if(ptAlerts.a30){
+      var t30=endMs-30*60000-now;
+      if(t30>0)alertTimers.push(setTimeout(function(){fireAlert('ขวดที่'+(i+1)+' — '+s.name+' จะหมดใน 30 นาที!');},t30));
+    }
+    var t0=endMs-now;
+    if(t0>0)alertTimers.push(setTimeout(function(){fireAlert('⚠️ ขวดที่'+(i+1)+' — '+s.name+' หมดแล้ว! เตรียมขวดถัดไปด้วยครับ');renderPtPlan();},t0));
+  });
+}
+
+function fireAlert(msg){
+  if(ptAlerts.sound){
+    [440,550,440,550].forEach(function(f,i){setTimeout(function(){tone(f,null,.2,0.3);},i*220);});
+  }
+  // Show banner
+  var b=document.createElement('div');
+  b.style.cssText='position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;background:#cf222e;color:#fff;padding:12px 20px;border-radius:12px;font-size:15px;font-weight:600;font-family:"IBM Plex Sans Thai",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.4);max-width:90vw;text-align:center;';
+  b.textContent=msg;
+  document.body.appendChild(b);
+  setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},8000);
+  // TTS
+  if(synth&&ptAlerts.sound){
+    try{var u=new SpeechSynthesisUtterance(msg);u.lang='th-TH';u.rate=1.1;synth.speak(u);}catch(e){}
+  }
+}
+
+function togglePtAlert(type){
+  if(type==='15'){ptAlerts.a15=!ptAlerts.a15;document.getElementById('togAlert15').classList.toggle('on',ptAlerts.a15);document.getElementById('lblAlert15').textContent=ptAlerts.a15?'เปิด':'ปิด';}
+  else if(type==='30'){ptAlerts.a30=!ptAlerts.a30;document.getElementById('togAlert30').classList.toggle('on',ptAlerts.a30);document.getElementById('lblAlert30').textContent=ptAlerts.a30?'เปิด':'ปิด';}
+  else{ptAlerts.sound=!ptAlerts.sound;document.getElementById('togAlertSound').classList.toggle('on',ptAlerts.sound);document.getElementById('lblAlertSound').textContent=ptAlerts.sound?'เปิด':'ปิด';}
+}
+
+// Init patient tab
+renderFluidList();
 calculate();
 </script>
 </body>
