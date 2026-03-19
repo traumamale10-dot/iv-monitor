@@ -213,23 +213,47 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
   </div>
 
   <div class="panel">
-    <div class="panel-head"><span class="icon">🧮</span><span class="htxt">คำนวณอัตราน้ำเกลือ</span></div>
-    <div class="panel-body">
-      <div class="irow">
-        <label>ปริมาณสารละลาย</label>
-        <input type="number" id="inVol" value="500" min="50" max="3000" oninput="calculate()">
-        <span class="unit">mL</span>
+    <div class="panel-head">
+      <span class="icon">🧮</span><span class="htxt">คำนวณอัตราน้ำเกลือ</span>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:0;border:1px solid var(--border2);border-radius:8px;overflow:hidden;">
+        <button id="modeVolBtn" onclick="setCalcMode('vol')" style="height:30px;padding:0 10px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--blue);color:#fff;transition:all .15s;">ปริมาณ+เวลา</button>
+        <button id="modeCCBtn"  onclick="setCalcMode('cc')"  style="height:30px;padding:0 10px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--surface2);color:var(--muted);transition:all .15s;">CC/ชั่วโมง</button>
       </div>
-      <div class="irow">
-        <label>เวลาที่ต้องการ</label>
-        <input type="number" id="inHrs" value="8" min="0.5" max="24" step="0.5" oninput="calculate()">
-        <span class="unit">ชม.</span>
+    </div>
+    <div class="panel-body">
+      <!-- Mode A: ปริมาณ + เวลา -->
+      <div id="inputVolMode">
+        <div class="irow">
+          <label>ปริมาณสารละลาย</label>
+          <input type="number" id="inVol" value="500" min="50" max="3000" oninput="calculate()">
+          <span class="unit">mL</span>
+        </div>
+        <div class="irow">
+          <label>เวลาที่ต้องการ</label>
+          <input type="number" id="inHrs" value="8" min="0.5" max="24" step="0.5" oninput="calculate()">
+          <span class="unit">ชม.</span>
+        </div>
+      </div>
+      <!-- Mode B: CC/ชั่วโมง -->
+      <div id="inputCCMode" style="display:none;">
+        <div class="irow">
+          <label>อัตราที่ต้องการ</label>
+          <input type="number" id="inCChr" value="62" min="1" max="999" oninput="calculate()">
+          <span class="unit">CC/ชม.</span>
+        </div>
+        <div class="irow">
+          <label>ปริมาณรวม</label>
+          <input type="number" id="inVolCC" value="500" min="50" max="3000" oninput="calculate()">
+          <span class="unit">mL</span>
+        </div>
       </div>
       <div class="mgrid">
-        <div class="metric"><div class="v" id="mMl">62.5</div><div class="l">mL / ชั่วโมง</div></div>
+        <div class="metric"><div class="v" id="mMl">62.5</div><div class="l">mL (CC) / ชั่วโมง</div></div>
+        <div class="metric"><div class="v" id="mMlMin">1.0</div><div class="l">mL (CC) / นาที</div></div>
         <div class="metric"><div class="v" id="mGtt">21</div><div class="l">หยด / นาที (เป้า)</div></div>
         <div class="metric"><div class="v" id="mSec">2.9</div><div class="l">วินาที / หยด</div></div>
         <div class="metric"><div class="v" id="mTotal">10,000</div><div class="l">หยดรวม</div></div>
+        <div class="metric"><div class="v" id="mHrs">8.0</div><div class="l">ชั่วโมงที่ใช้</div></div>
       </div>
     </div>
   </div>
@@ -442,16 +466,43 @@ function speakNum(n){
 }
 
 // ── IV calc ────────────────────────────────────────────────
+var calcMode='vol'; // 'vol' = ปริมาณ+เวลา, 'cc' = CC/ชั่วโมง
+
+function setCalcMode(m){
+  calcMode=m;
+  document.getElementById('inputVolMode').style.display=m==='vol'?'block':'none';
+  document.getElementById('inputCCMode').style.display=m==='cc'?'block':'none';
+  var bv=document.getElementById('modeVolBtn'), bc=document.getElementById('modeCCBtn');
+  bv.style.background=m==='vol'?'var(--blue)':'var(--surface2)';
+  bv.style.color=m==='vol'?'#fff':'var(--muted)';
+  bc.style.background=m==='cc'?'var(--blue)':'var(--surface2)';
+  bc.style.color=m==='cc'?'#fff':'var(--muted)';
+  calculate();
+}
+
 function selectSet(n){ivSet=n;[15,20,60].forEach(function(v){document.getElementById('btn'+v).classList.toggle('active',v===n);});calculate();}
+
 function calculate(){
-  var v=parseFloat(document.getElementById('inVol').value)||500;
-  var h=parseFloat(document.getElementById('inHrs').value)||8;
-  var mlHr=v/h,gttMin=(mlHr*ivSet)/60;
-  targetSec=60/gttMin;totalDrops=Math.round(v*ivSet);
+  var mlHr, v, h;
+  if(calcMode==='cc'){
+    mlHr=parseFloat(document.getElementById('inCChr').value)||62;
+    v=parseFloat(document.getElementById('inVolCC').value)||500;
+    h=v/mlHr;
+  } else {
+    v=parseFloat(document.getElementById('inVol').value)||500;
+    h=parseFloat(document.getElementById('inHrs').value)||8;
+    mlHr=v/h;
+  }
+  var mlMin=mlHr/60;
+  var gttMin=(mlHr*ivSet)/60;
+  targetSec=60/gttMin;
+  totalDrops=Math.round(v*ivSet);
   document.getElementById('mMl').textContent=mlHr.toFixed(1);
+  document.getElementById('mMlMin').textContent=mlMin.toFixed(2);
   document.getElementById('mGtt').textContent=Math.round(gttMin);
   document.getElementById('mSec').textContent=targetSec.toFixed(1);
   document.getElementById('mTotal').textContent=totalDrops.toLocaleString();
+  document.getElementById('mHrs').textContent=h.toFixed(1);
 }
 
 // ══════════════════════════════════════════════════════════
