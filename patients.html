@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>IV Drip Monitor — ผู้ป่วย</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+[data-theme="dark"]{--bg:#0d1117;--surface:#161b22;--surface2:#1c2330;--border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);--text:#e6edf3;--muted:#8b949e;--blue:#2f81f7;--blue-dim:rgba(47,129,247,0.18);--green:#3fb950;--green-dim:rgba(63,185,80,0.18);--red:#f85149;--red-dim:rgba(248,81,73,0.18);--amber:#e3b341;--amber-dim:rgba(227,179,65,0.18);--shadow:rgba(0,0,0,0.4);--tb:#0d1117;}
+[data-theme="light"]{--bg:#f0f4f9;--surface:#fff;--surface2:#f6f8fa;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#1a2332;--muted:#656d76;--blue:#0969da;--blue-dim:rgba(9,105,218,0.1);--green:#1a7f37;--green-dim:rgba(26,127,55,0.1);--red:#cf222e;--red-dim:rgba(207,34,46,0.1);--amber:#9a6700;--amber-dim:rgba(154,103,0,0.1);--shadow:rgba(0,0,0,0.08);--tb:#f0f4f9;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s;}
+.shell{max-width:560px;margin:0 auto;padding:1rem;}
+
+/* ── Login ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;z-index:100;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2rem 1.5rem;width:100%;max-width:340px;box-shadow:0 8px 32px var(--shadow);}
+.login-logo{text-align:center;margin-bottom:1.5rem;}
+.login-logo .drop{font-size:44px;}
+.login-logo h2{font-size:18px;font-weight:600;margin-top:8px;}
+.login-logo p{font-size:13px;color:var(--muted);margin-top:4px;}
+.pin-display{display:flex;justify-content:center;gap:12px;margin:16px 0;}
+.pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:all .15s;}
+.pin-dot.filled{background:var(--blue);border-color:var(--blue);}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.nkey{height:56px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--text);font-size:20px;font-weight:600;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.nkey:hover{background:var(--surface);border-color:var(--blue);}
+.nkey:active{transform:scale(.94);}
+.nkey.del{font-size:16px;color:var(--muted);}
+.nkey.empty{border:none;background:transparent;cursor:default;}
+.login-btn{width:100%;height:50px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;margin-top:12px;transition:opacity .15s;}
+.login-btn:disabled{opacity:.4;cursor:not-allowed;}
+.login-err{background:var(--red-dim);border:1px solid var(--red);color:var(--red);border-radius:9px;padding:9px 14px;font-size:13px;text-align:center;margin-top:10px;display:none;}
+
+/* ── Topbar ── */
+.topbar{display:flex;align-items:center;gap:12px;padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+.logo-dot{width:11px;height:11px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue);flex-shrink:0;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.topbar h1{font-size:17px;font-weight:600;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.ward-badge{background:var(--blue-dim);border:1px solid var(--blue);color:var(--blue);font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;font-family:'IBM Plex Mono',monospace;}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite;}
+.sync-dot.err{background:var(--red);}
+.icon-btn{width:38px;height:38px;border-radius:9px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.back-btn{height:38px;padding:0 12px;border-radius:9px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);font-size:13px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;display:flex;align-items:center;gap:5px;}
+.back-btn:hover{border-color:var(--blue);color:var(--blue);}
+.logout-btn{font-size:12px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
+.logout-btn:hover{color:var(--red);border-color:var(--red);}
+
+/* ── Panel ── */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);margin-bottom:1rem;}
+.ph{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2);}
+.ph .icon{font-size:15px;}.ph .htxt{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}.ph .hright{margin-left:auto;}
+.pb{padding:16px;}
+
+/* ── Inputs ── */
+.irow{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.irow:last-child{margin-bottom:0;}
+.irow label{font-size:15px;color:var(--muted);min-width:105px;flex-shrink:0;}
+input[type=number],input[type=text],input[type=datetime-local],select{height:46px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:9px;padding:0 13px;font-size:16px;color:var(--text);outline:none;font-family:'IBM Plex Sans Thai',sans-serif;transition:border-color .15s;width:100%;}
+input:focus,select:focus{border-color:var(--blue);}
+.irow input,.irow select{flex:1;width:auto;}
+.unit{font-size:15px;color:var(--muted);min-width:32px;flex-shrink:0;}
+
+/* ── Patient list ── */
+.pt-card{background:var(--surface2);border:1.5px solid var(--border2);border-radius:12px;padding:13px 14px;margin-bottom:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;}
+.pt-card:hover{border-color:var(--blue);}
+.pt-card.sel{border-color:var(--blue);background:var(--blue-dim);}
+.pt-avatar{width:42px;height:42px;border-radius:50%;background:var(--blue-dim);border:2px solid var(--blue);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:var(--blue);flex-shrink:0;}
+.pt-info{flex:1;min-width:0;}
+.pt-name{font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pt-sub{font-size:12px;color:var(--muted);margin-top:2px;}
+.pt-badge{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;flex-shrink:0;}
+.bact{background:var(--green-dim);color:var(--green);border:1px solid var(--green);}
+.bwait{background:var(--surface2);color:var(--muted);border:1px solid var(--border2);}
+
+/* ── Fluid plan in patient ── */
+.fluid-row{background:var(--surface2);border:1px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:10px;}
+.fr-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+
+/* ── Metrics in patient ── */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:11px 13px;}
+.metric .v{font-size:20px;font-weight:600;font-family:'IBM Plex Mono',monospace;line-height:1.1;}
+.metric .l{font-size:11px;color:var(--muted);margin-top:3px;}
+.metric.hi{border-color:var(--blue);background:var(--blue-dim);}
+.metric.hi .v{color:var(--blue);}
+
+/* ── Summary timeline ── */
+.sched-item{border-radius:10px;padding:11px 13px;margin-bottom:8px;border:1px solid;}
+.si-head{display:flex;justify-content:space-between;margin-bottom:5px;}
+.si-name{font-size:14px;font-weight:600;}
+.si-status{font-size:11px;}
+.si-detail{font-size:12px;color:var(--muted);line-height:1.7;}
+
+/* ── Buttons ── */
+.btn-row{display:flex;gap:10px;margin-top:12px;}
+.btn-main{flex:2;height:50px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;transition:opacity .15s;}
+.btn-main:hover{opacity:.88;}
+.btn-run{height:50px;padding:0 18px;border-radius:12px;border:none;background:var(--green);color:#fff;font-size:16px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;transition:opacity .15s;}
+.btn-run:hover{opacity:.88;}
+.btn-sec{flex:1;height:50px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted);font-size:15px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;transition:all .15s;}
+.btn-sec:hover{border-color:var(--red);color:var(--red);}
+
+/* ── Toggle ── */
+.togrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.toglabel{font-size:15px;color:var(--text);}
+.tog-wrap{display:flex;align-items:center;gap:10px;}
+.tog{width:46px;height:26px;border-radius:13px;background:var(--border2);cursor:pointer;position:relative;border:none;outline:none;transition:background .2s;}
+.tog.on{background:var(--blue);}
+.knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.25);}
+.tog.on .knob{left:23px;}
+.tlab{font-size:15px;color:var(--muted);min-width:28px;}
+.hint{font-size:13px;color:var(--muted);text-align:center;margin-top:8px;}
+
+/* ── Print ── */
+@media print{
+  body{background:#fff!important;color:#000!important;}
+  .shell,.topbar,#loginScreen{display:none!important;}
+  #printArea{display:block!important;padding:20px;font-family:'IBM Plex Sans Thai',sans-serif;}
+  .ph-t{font-size:20px;font-weight:700;color:#1a3a5c;border-bottom:2px solid #1a3a5c;padding-bottom:10px;margin-bottom:14px;}
+  .pg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:#f5f9fd;border-radius:8px;padding:12px;margin-bottom:14px;}
+  .pi .l{font-size:10px;color:#888;}.pi .v{font-size:14px;font-weight:700;color:#1a3a5c;}
+  .pr{display:flex;padding:8px 0;border-bottom:1px solid #e0e8f0;gap:10px;}
+  .pr:last-of-type{border-bottom:none;}
+  .prn{width:24px;height:24px;border-radius:50%;background:#e8f2fc;color:#0969da;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+  .pri{flex:1;}.pri .n{font-size:14px;font-weight:600;color:#1a3a5c;}.pri .d{font-size:11px;color:#555;margin-top:2px;line-height:1.6;}
+  .prt{font-size:11px;text-align:right;flex-shrink:0;}
+  .ptot{background:#e8f2fc;border-radius:8px;padding:10px 14px;margin-top:10px;display:flex;justify-content:space-between;}
+  .pfoot{margin-top:16px;border-top:1px solid #ccc;padding-top:8px;font-size:11px;color:#999;display:flex;justify-content:space-between;}
+}
+#printArea{display:none;}
+</style>
+</head>
+<body>
+
+<!-- ── Login ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="drop">🏥</div>
+      <h2>ระบบผู้ป่วย</h2>
+      <p>กรอก PIN ของหน่วยงาน (4-6 หลัก)</p>
+    </div>
+    <div class="pin-display" id="pinDisplay">
+      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+      <div class="pin-dot" id="pd4"></div><div class="pin-dot" id="pd5"></div>
+    </div>
+    <div class="numpad">
+      <button class="nkey" onclick="pinPress('1')">1</button><button class="nkey" onclick="pinPress('2')">2</button><button class="nkey" onclick="pinPress('3')">3</button>
+      <button class="nkey" onclick="pinPress('4')">4</button><button class="nkey" onclick="pinPress('5')">5</button><button class="nkey" onclick="pinPress('6')">6</button>
+      <button class="nkey" onclick="pinPress('7')">7</button><button class="nkey" onclick="pinPress('8')">8</button><button class="nkey" onclick="pinPress('9')">9</button>
+      <button class="nkey empty"></button><button class="nkey" onclick="pinPress('0')">0</button><button class="nkey del" onclick="pinDel()">⌫</button>
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>เข้าใช้งาน</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ── Main App ── -->
+<div class="shell" id="mainApp" style="display:none;">
+
+<div class="topbar">
+  <div class="logo-dot"></div>
+  <h1>🏥 ข้อมูลผู้ป่วย</h1>
+  <div class="topbar-right">
+    <span class="sync-dot" id="syncDot"></span>
+    <span class="ward-badge" id="wardBadge">—</span>
+    <button class="icon-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <button class="logout-btn" onclick="doLogout()">ออก</button>
+    <a href="index.html" class="back-btn">← คำนวณ</a>
+  </div>
+</div>
+
+<!-- Patient list -->
+<div class="panel">
+  <div class="ph">
+    <span class="icon">👥</span><span class="htxt">รายชื่อผู้ป่วย</span>
+    <div class="hright"><button onclick="newPatient()" style="height:30px;padding:0 12px;border-radius:7px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">+ เพิ่มผู้ป่วย</button></div>
+  </div>
+  <div class="pb" id="ptList"><div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">ยังไม่มีผู้ป่วย</div></div>
+</div>
+
+<!-- Form (add/edit) -->
+<div id="ptForm" style="display:none;">
+  <div class="panel">
+    <div class="ph">
+      <span class="icon">👤</span><span class="htxt" id="formTitle">เพิ่มผู้ป่วย</span>
+      <div class="hright" style="display:flex;gap:6px;">
+        <button onclick="savePatient()" style="height:32px;padding:0 12px;border-radius:8px;border:none;background:var(--blue);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">💾 บันทึก</button>
+        <button onclick="closeForm()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--border2);background:var(--surface2);color:var(--muted);font-size:13px;cursor:pointer;">✕</button>
+      </div>
+    </div>
+    <div class="pb">
+      <div class="irow"><label>ชื่อ-นามสกุล</label><input type="text" id="fName" placeholder="ชื่อ นามสกุล"></div>
+      <div class="irow"><label>HN / AN</label><input type="text" id="fHN" placeholder="เช่น 12345678"></div>
+      <div class="irow"><label>ห้อง / เตียง</label><input type="text" id="fRoom" placeholder="เช่น 302/1"></div>
+      <div class="irow"><label>วันเริ่มให้สารน้ำ</label><input type="datetime-local" id="fStart"></div>
+    </div>
+  </div>
+
+  <!-- Fluid plan with full calc -->
+  <div class="panel">
+    <div class="ph">
+      <span class="icon">💧</span><span class="htxt">แผนการให้สารน้ำ</span>
+      <div class="hright"><button onclick="addPtFluid()" style="height:30px;padding:0 12px;border-radius:7px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">+ เพิ่ม</button></div>
+    </div>
+    <div class="pb" id="ptFluidList"><div style="text-align:center;color:var(--muted);font-size:14px;padding:.75rem 0;">กด "+ เพิ่ม"</div></div>
+  </div>
+</div>
+
+<!-- Detail view -->
+<div id="ptDetail" style="display:none;">
+  <div class="panel">
+    <div class="ph">
+      <span class="icon">📋</span><span class="htxt" id="ptDetailName">สรุปแผน</span>
+      <div class="hright" style="display:flex;gap:6px;">
+        <button onclick="runFromPt()" style="height:32px;padding:0 10px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">▶ รันเลย</button>
+        <button onclick="printPt()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;cursor:pointer;">🖨️</button>
+        <button onclick="editCurPt()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--blue);background:var(--blue-dim);color:var(--blue);font-size:13px;cursor:pointer;">✏️</button>
+        <button onclick="delCurPt()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--red);background:var(--red-dim);color:var(--red);font-size:13px;cursor:pointer;">🗑</button>
+      </div>
+    </div>
+    <div class="pb" id="ptSummary"></div>
+  </div>
+</div>
+
+<!-- Alert settings -->
+<div class="panel">
+  <div class="ph"><span class="icon">🔔</span><span class="htxt">การแจ้งเตือน</span></div>
+  <div class="pb">
+    <div class="togrow"><span class="toglabel">แจ้งเตือนล่วงหน้า 15 นาที</span><div class="tog-wrap"><button class="tog on" id="tog15" onclick="toggleAlert('15')"><div class="knob"></div></button><span class="tlab" id="lbl15">เปิด</span></div></div>
+    <div class="togrow"><span class="toglabel">แจ้งเตือนล่วงหน้า 30 นาที</span><div class="tog-wrap"><button class="tog on" id="tog30" onclick="toggleAlert('30')"><div class="knob"></div></button><span class="tlab" id="lbl30">เปิด</span></div></div>
+    <div class="togrow" style="margin-bottom:0;"><span class="toglabel">เสียงแจ้งเตือน</span><div class="tog-wrap"><button class="tog on" id="togSnd" onclick="toggleAlert('snd')"><div class="knob"></div></button><span class="tlab" id="lblSnd">เปิด</span></div></div>
+  </div>
+</div>
+
+</div><!-- mainApp -->
+<div id="printArea" style="display:none;"></div>
+
+<script>
+var isDark=true, aCtx=null;
+var API_URL='YOUR_APPS_SCRIPT_URL_HERE';
+var currentWard=null, currentWardName='', pinBuf='';
+var patients=[], currentPtId=null, editingPtId=null, ptFluids=[];
+var ivSet=20;
+var alerts={a15:true,a30:true,snd:true}, alertTimers=[];
+var FLUID_OPTS=['NSS (0.9% NaCl)','5%D/NSS','5%D/W','Ringer\'s Lactate (RL)','กำหนดเอง'];
+
+function toggleTheme(){isDark=!isDark;document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';}
+
+// ── Audio ──────────────────────────────────────────────────
+function ac(){if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)();return aCtx;}
+function tone(f1,f2,dur,g){try{var c=ac(),o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(f1,c.currentTime);if(f2)o.frequency.exponentialRampToValueAtTime(f2,c.currentTime+dur*.7);gn.gain.setValueAtTime(g,c.currentTime);gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);o.start(c.currentTime);o.stop(c.currentTime+dur);}catch(e){}}
+
+// ── PIN ────────────────────────────────────────────────────
+function pinPress(d){if(pinBuf.length>=6)return;pinBuf+=d;updateDots();document.getElementById('loginErr').style.display='none';if(pinBuf.length>=4)document.getElementById('loginBtn').disabled=false;if(pinBuf.length===6)setTimeout(doLogin,200);}
+function pinDel(){if(!pinBuf.length)return;pinBuf=pinBuf.slice(0,-1);updateDots();document.getElementById('loginBtn').disabled=pinBuf.length<4;}
+function updateDots(){for(var i=0;i<6;i++)document.getElementById('pd'+i).classList.toggle('filled',i<pinBuf.length);}
+document.addEventListener('keydown',function(e){if(document.getElementById('loginScreen').style.display==='none')return;if(e.key>='0'&&e.key<='9')pinPress(e.key);else if(e.key==='Backspace')pinDel();else if(e.key==='Enter'&&pinBuf.length>=4)doLogin();});
+
+function doLogin(){
+  if(pinBuf.length<4)return;
+  var pin=pinBuf;
+  if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE'){enterApp(pin,'Ward-'+pin);return;}
+  document.getElementById('loginBtn').disabled=true;
+  apiCall({action:'login',code:pin})
+    .then(function(r){if(r.ok){enterApp(r.wardCode,r.wardName);}else{showErr(r.error||'PIN ไม่ถูกต้อง');pinBuf='';updateDots();document.getElementById('loginBtn').disabled=true;}})
+    .catch(function(){enterApp(pin,'Ward-'+pin);});
+}
+function showErr(m){var e=document.getElementById('loginErr');e.textContent=m;e.style.display='block';}
+function enterApp(code,name){
+  currentWard=code;currentWardName=name;
+  try{localStorage.setItem('iv_ward_pt',JSON.stringify({code:code,name:name}));}catch(e){}
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('wardBadge').textContent=name;
+  setSyncDot('ok');
+  pinBuf='';updateDots();document.getElementById('loginBtn').disabled=true;
+  loadFromServer();
+}
+function doLogout(){if(!confirm('ออกจากระบบ?'))return;currentWard=null;try{localStorage.removeItem('iv_ward_pt');}catch(e){}patients=[];document.getElementById('mainApp').style.display='none';document.getElementById('loginScreen').style.display='flex';pinBuf='';updateDots();document.getElementById('loginBtn').disabled=true;}
+
+// ── API ────────────────────────────────────────────────────
+function setSyncDot(s){var d=document.getElementById('syncDot');d.className='sync-dot'+(s==='syncing'?' syncing':s==='err'?' err':'');}
+function apiCall(data){return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({ward:currentWard,code:currentWard},data))}).then(function(r){return r.json();});}
+function loadFromServer(){
+  if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE'){loadLocal();renderPtList();setupAlerts();return;}
+  setSyncDot('syncing');
+  apiCall({action:'getPatients'}).then(function(r){setSyncDot('ok');if(r.ok){patients=r.patients||[];saveLocal();renderPtList();setupAlerts();}}).catch(function(){setSyncDot('err');loadLocal();renderPtList();setupAlerts();});
+}
+function loadLocal(){try{var d=localStorage.getItem('iv_pts_'+(currentWard||'x'));if(d)patients=JSON.parse(d);}catch(e){patients=[];}}
+function saveLocal(){try{localStorage.setItem('iv_pts_'+(currentWard||'x'),JSON.stringify(patients));}catch(e){}}
+function syncSave(pt){saveLocal();if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE')return;setSyncDot('syncing');apiCall({action:'savePatient',patient:pt}).then(function(r){setSyncDot(r.ok?'ok':'err');}).catch(function(){setSyncDot('err');});}
+function syncDel(id){saveLocal();if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE')return;setSyncDot('syncing');apiCall({action:'deletePatient',patientId:id}).then(function(r){setSyncDot(r.ok?'ok':'err');}).catch(function(){setSyncDot('err');});}
+
+// ── Patient CRUD ───────────────────────────────────────────
+function newPatient(){editingPtId=null;ptFluids=[];document.getElementById('fName').value='';document.getElementById('fHN').value='';document.getElementById('fRoom').value='';document.getElementById('fStart').value='';document.getElementById('formTitle').textContent='เพิ่มผู้ป่วย';renderPtFluidList();document.getElementById('ptForm').style.display='block';document.getElementById('ptDetail').style.display='none';}
+function editCurPt(){var pt=patients.find(function(p){return p.id===currentPtId;});if(!pt)return;editingPtId=pt.id;ptFluids=JSON.parse(JSON.stringify(pt.fluids||[]));document.getElementById('fName').value=pt.name||'';document.getElementById('fHN').value=pt.hn||'';document.getElementById('fRoom').value=pt.room||'';document.getElementById('fStart').value=pt.start||'';document.getElementById('formTitle').textContent='แก้ไขข้อมูล';renderPtFluidList();document.getElementById('ptForm').style.display='block';document.getElementById('ptDetail').style.display='none';}
+function savePatient(){
+  var name=document.getElementById('fName').value.trim();
+  if(!name){alert('กรุณากรอกชื่อ');return;}
+  var pt={id:editingPtId||('pt'+Date.now()),name:name,hn:document.getElementById('fHN').value.trim(),room:document.getElementById('fRoom').value.trim(),start:document.getElementById('fStart').value,fluids:JSON.parse(JSON.stringify(ptFluids))};
+  if(editingPtId)patients=patients.map(function(p){return p.id===editingPtId?pt:p;});else patients.push(pt);
+  syncSave(pt);currentPtId=pt.id;closeForm();renderPtList();showDetail(pt.id);setupAlerts();
+}
+function delCurPt(){var pt=patients.find(function(p){return p.id===currentPtId;});if(!pt||!confirm('ลบ "'+pt.name+'"?'))return;var id=currentPtId;patients=patients.filter(function(p){return p.id!==id;});syncDel(id);currentPtId=null;document.getElementById('ptDetail').style.display='none';renderPtList();}
+function closeForm(){document.getElementById('ptForm').style.display='none';if(currentPtId)showDetail(currentPtId);}
+function selectPt(id){currentPtId=id;renderPtList();showDetail(id);document.getElementById('ptForm').style.display='none';}
+
+// ── Fluid plan ─────────────────────────────────────────────
+var IVSET_LOCAL=20;
+function addPtFluid(){ptFluids.push({id:'f'+Date.now(),name:'NSS (0.9% NaCl)',vol:500,rate:80,bottles:1});renderPtFluidList();}
+function removePtFluid(id){ptFluids=ptFluids.filter(function(f){return f.id!==id;});renderPtFluidList();}
+function updPtFluid(id,field,val){ptFluids.forEach(function(f){if(f.id===id)f[field]=field==='name'?val:(parseFloat(val)||0);});renderPtFluidCalc();}
+
+function renderPtFluidList(){
+  var el=document.getElementById('ptFluidList');
+  if(ptFluids.length===0){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:14px;padding:.75rem 0;">กด "+ เพิ่ม"</div>';return;}
+  el.innerHTML=ptFluids.map(function(f,i){
+    var gttMin=(f.rate*IVSET_LOCAL)/60, spd=60/gttMin, drops=Math.round(f.vol*IVSET_LOCAL), hrs=f.vol/f.rate;
+    return '<div class="fluid-row">'
+      +'<div class="fr-top">'
+      +'<span style="font-size:13px;font-weight:600;color:var(--muted);">รายการ '+(i+1)+'</span>'
+      +'<button onclick="removePtFluid(\''+f.id+'\')" style="margin-left:auto;width:28px;height:28px;border-radius:7px;border:1px solid var(--red);background:var(--red-dim);color:var(--red);font-size:13px;cursor:pointer;">✕</button>'
+      +'</div>'
+      +'<select onchange="updPtFluid(\''+f.id+'\',\'name\',this.value)" style="width:100%;height:40px;font-size:14px;margin-bottom:8px;">'
+      +FLUID_OPTS.map(function(o){return '<option value="'+o+'"'+(f.name===o?' selected':'')+'>'+o+'</option>';}).join('')+'</select>'
+      +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px;">'
+      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">mL / ขวด</div><input type="number" value="'+f.vol+'" min="50" max="2000" step="50" style="height:38px;font-size:15px;" onchange="updPtFluid(\''+f.id+'\',\'vol\',this.value)"></div>'
+      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">mL / ชม.</div><input type="number" value="'+f.rate+'" min="1" max="999" style="height:38px;font-size:15px;" onchange="updPtFluid(\''+f.id+'\',\'rate\',this.value)"></div>'
+      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">จำนวนขวด</div><input type="number" value="'+f.bottles+'" min="1" max="20" style="height:38px;font-size:15px;" onchange="updPtFluid(\''+f.id+'\',\'bottles\',this.value)"></div>'
+      +'</div>'
+      // per-item calculated summary
+      +'<div style="background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 12px;">'
+      +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;">'
+      +'<div><div style="font-size:18px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+Math.round(gttMin)+'</div><div style="font-size:10px;color:var(--muted);">gtt/min</div></div>'
+      +'<div><div style="font-size:18px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+spd.toFixed(1)+'</div><div style="font-size:10px;color:var(--muted);">วิ/หยด</div></div>'
+      +'<div><div style="font-size:18px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+hrs.toFixed(1)+'</div><div style="font-size:10px;color:var(--muted);">ชม./ขวด</div></div>'
+      +'<div><div style="font-size:18px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+drops.toLocaleString()+'</div><div style="font-size:10px;color:var(--muted);">หยด/ขวด</div></div>'
+      +'</div></div>'
+      +'</div>';
+  }).join('');
+  renderPtFluidCalc();
+}
+
+function renderPtFluidCalc(){
+  // total summary already handled in renderPtFluidList per-item
+}
+
+// ── Patient list ───────────────────────────────────────────
+function renderPtList(){
+  var el=document.getElementById('ptList');
+  if(patients.length===0){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">ยังไม่มีผู้ป่วย</div>';return;}
+  var now=new Date();
+  el.innerHTML=patients.map(function(pt){
+    var sched=buildSched(pt.fluids||[],pt.start?new Date(pt.start):new Date());
+    var isAct=sched.some(function(s){return now>=s.start&&now<s.end;});
+    var ini=(pt.name||'?').split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+    return '<div class="pt-card'+(pt.id===currentPtId?' sel':'')+'" onclick="selectPt(\''+pt.id+'\')">'
+      +'<div class="pt-avatar">'+ini+'</div>'
+      +'<div class="pt-info"><div class="pt-name">'+pt.name+'</div><div class="pt-sub">'+(pt.hn||'—')+' · '+(pt.room||'—')+'</div></div>'
+      +'<span class="pt-badge '+(isAct?'bact':'bwait')+'">'+(isAct?'กำลังให้':'รอ/เสร็จ')+'</span>'
+      +'</div>';
+  }).join('');
+}
+
+// ── Detail / Summary ───────────────────────────────────────
+function buildSched(fArr,startTime){var sc=[],cur=new Date(startTime);fArr.forEach(function(f){for(var b=0;b<(f.bottles||1);b++){var hrs=f.vol/f.rate,end=new Date(cur.getTime()+hrs*3600000);sc.push({name:f.name,vol:f.vol,rate:f.rate,hrs:hrs,start:new Date(cur),end:end});cur=new Date(end);}});return sc;}
+function fmtTime(d){return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')+' น.';}
+function fmtDT(d){return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear()+' '+fmtTime(d);}
+
+function showDetail(id){
+  var pt=patients.find(function(p){return p.id===id;});if(!pt)return;
+  document.getElementById('ptDetailName').textContent=pt.name;
+  var st=pt.start?new Date(pt.start):new Date();
+  var sched=buildSched(pt.fluids||[],st);
+  var totalVol=(pt.fluids||[]).reduce(function(s,f){return s+f.vol*(f.bottles||1);},0);
+  var totalHrs=sched.length?(sched[sched.length-1].end-st)/3600000:0;
+  var totalDrops=(pt.fluids||[]).reduce(function(s,f){return s+Math.round(f.vol*IVSET_LOCAL)*(f.bottles||1);},0);
+  var now=new Date();
+
+  var html='<div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+    +'<div><div style="font-size:11px;color:var(--muted);">HN/AN</div><div style="font-size:15px;font-weight:600;">'+(pt.hn||'—')+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">ห้อง/เตียง</div><div style="font-size:15px;font-weight:600;">'+(pt.room||'—')+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">วันเริ่ม</div><div style="font-size:13px;font-weight:600;">'+(pt.start?fmtDT(st):'—')+'</div></div>'
+    +'<div><div style="font-size:11px;color:var(--muted);">Set น้ำเกลือ</div><div style="font-size:13px;font-weight:600;">'+IVSET_LOCAL+' gtt/mL</div></div>'
+    +'</div>'
+    // total summary cards
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">'
+    +'<div style="background:var(--blue-dim);border:1px solid var(--blue);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+totalVol.toLocaleString()+'</div><div style="font-size:11px;color:var(--muted);">mL รวม</div></div>'
+    +'<div style="background:var(--blue-dim);border:1px solid var(--blue);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+totalHrs.toFixed(1)+'</div><div style="font-size:11px;color:var(--muted);">ชั่วโมงรวม</div></div>'
+    +'<div style="background:var(--blue-dim);border:1px solid var(--blue);border-radius:10px;padding:10px;text-align:center;"><div style="font-size:20px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;color:var(--blue);">'+totalDrops.toLocaleString()+'</div><div style="font-size:11px;color:var(--muted);">หยดรวม</div></div>'
+    +'</div>';
+
+  // per-bottle schedule
+  if(sched.length===0){html+='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem;">ยังไม่มีแผนสารน้ำ</div>';}
+  else{
+    sched.forEach(function(s,i){
+      var isNow=now>=s.start&&now<s.end,isDone=now>=s.end;
+      var col=isNow?'var(--green)':isDone?'var(--muted)':'var(--blue)';
+      var bg=isNow?'var(--green-dim)':isDone?'var(--surface2)':'var(--blue-dim)';
+      var gttMin=(s.rate*IVSET_LOCAL)/60, spd=60/gttMin, drops=Math.round(s.vol*IVSET_LOCAL);
+      html+='<div style="background:'+bg+';border:1px solid '+col+';border-radius:10px;padding:11px 13px;margin-bottom:8px;">'
+        +'<div style="display:flex;justify-content:space-between;margin-bottom:6px;">'
+        +'<span style="font-size:14px;font-weight:600;color:'+col+';">ขวดที่ '+(i+1)+' — '+s.name+'</span>'
+        +'<span style="font-size:11px;color:'+col+';">'+(isNow?'● กำลังให้':isDone?'✓ เสร็จ':'○ รอ')+'</span>'
+        +'</div>'
+        +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center;margin-bottom:6px;">'
+        +'<div><div style="font-size:15px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">'+s.vol+'</div><div style="font-size:10px;color:var(--muted);">mL</div></div>'
+        +'<div><div style="font-size:15px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">'+Math.round(gttMin)+'</div><div style="font-size:10px;color:var(--muted);">gtt/min</div></div>'
+        +'<div><div style="font-size:15px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">'+s.hrs.toFixed(1)+'</div><div style="font-size:10px;color:var(--muted);">ชม.</div></div>'
+        +'<div><div style="font-size:15px;font-weight:600;font-family:\'IBM Plex Mono\',monospace;">'+drops.toLocaleString()+'</div><div style="font-size:10px;color:var(--muted);">หยด</div></div>'
+        +'</div>'
+        +'<div style="font-size:12px;color:var(--muted);">เริ่ม '+fmtDT(s.start)+' → หมด '+fmtDT(s.end)+'</div>'
+        +'</div>';
+    });
+    html+='<div style="background:var(--surface2);border-radius:10px;padding:10px 13px;display:flex;justify-content:space-between;">'
+      +'<span style="font-size:14px;color:var(--muted);">รวมทั้งหมด</span>'
+      +'<span style="font-size:15px;font-weight:600;">'+totalVol.toLocaleString()+' mL · '+totalHrs.toFixed(1)+' ชม.</span>'
+      +'</div>';
+  }
+  document.getElementById('ptSummary').innerHTML=html;
+  document.getElementById('ptDetail').style.display='block';
+}
+
+// ── Run from patient ───────────────────────────────────────
+function runFromPt(){
+  var pt=patients.find(function(p){return p.id===currentPtId;});
+  if(!pt||!pt.fluids||!pt.fluids.length){alert('ไม่มีแผนสารน้ำ');return;}
+  try{sessionStorage.setItem('iv_run_plan',JSON.stringify({patientName:pt.name,fluids:pt.fluids}));}catch(e){}
+  window.location.href='index.html';
+}
+
+// ── Alerts ─────────────────────────────────────────────────
+function toggleAlert(t){if(t==='15'){alerts.a15=!alerts.a15;document.getElementById('tog15').classList.toggle('on',alerts.a15);document.getElementById('lbl15').textContent=alerts.a15?'เปิด':'ปิด';}else if(t==='30'){alerts.a30=!alerts.a30;document.getElementById('tog30').classList.toggle('on',alerts.a30);document.getElementById('lbl30').textContent=alerts.a30?'เปิด':'ปิด';}else{alerts.snd=!alerts.snd;document.getElementById('togSnd').classList.toggle('on',alerts.snd);document.getElementById('lblSnd').textContent=alerts.snd?'เปิด':'ปิด';}}
+function setupAlerts(){
+  alertTimers.forEach(clearTimeout);alertTimers=[];var now=Date.now();
+  patients.forEach(function(pt){
+    var sched=buildSched(pt.fluids||[],pt.start?new Date(pt.start):new Date());
+    sched.forEach(function(s,i){
+      var endMs=s.end.getTime();if(endMs<=now)return;
+      if(alerts.a15){var t=endMs-15*60000-now;if(t>0)alertTimers.push(setTimeout(function(){fireAlert(pt.name+' — ขวดที่'+(i+1)+' จะหมดใน 15 นาที');},t));}
+      if(alerts.a30){var t=endMs-30*60000-now;if(t>0)alertTimers.push(setTimeout(function(){fireAlert(pt.name+' — ขวดที่'+(i+1)+' จะหมดใน 30 นาที');},t));}
+      alertTimers.push(setTimeout(function(){fireAlert('⚠️ '+pt.name+' ขวดที่'+(i+1)+' ('+s.name+') หมดแล้ว!');renderPtList();if(currentPtId===pt.id)showDetail(pt.id);},endMs-now));
+    });
+  });
+}
+function fireAlert(msg){
+  if(alerts.snd)[440,550,440].forEach(function(f,i){setTimeout(function(){tone(f,null,.2,.3);},i*200);});
+  var b=document.createElement('div');
+  b.style.cssText='position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;background:#cf222e;color:#fff;padding:12px 20px;border-radius:12px;font-size:15px;font-weight:600;font-family:"IBM Plex Sans Thai",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.4);max-width:90vw;text-align:center;cursor:pointer;';
+  b.textContent=msg;b.onclick=function(){if(b.parentNode)b.parentNode.removeChild(b);};
+  document.body.appendChild(b);setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},10000);
+}
+
+// ── Print ──────────────────────────────────────────────────
+function printPt(){
+  var pt=patients.find(function(p){return p.id===currentPtId;});if(!pt)return;
+  var st=pt.start?new Date(pt.start):new Date(),sched=buildSched(pt.fluids||[],st),now=new Date();
+  var totalVol=(pt.fluids||[]).reduce(function(s,f){return s+f.vol*(f.bottles||1);},0);
+  var totalHrs=sched.length?(sched[sched.length-1].end-st)/3600000:0;
+  var rows=sched.map(function(s,i){var isNow=now>=s.start&&now<s.end,isDone=now>=s.end,gtt=(s.rate*IVSET_LOCAL)/60,drops=Math.round(s.vol*IVSET_LOCAL),col=isNow?'#1a7f37':isDone?'#888':'#0969da';return '<div class="pr"><div class="prn">'+(i+1)+'</div><div class="pri"><div class="n">'+s.name+'</div><div class="d">'+s.vol+' mL · '+s.rate+' mL/ชม. · '+Math.round(gtt)+' gtt/min · '+s.hrs.toFixed(1)+' ชม. · '+drops.toLocaleString()+' หยด<br>เริ่ม '+fmtDT(s.start)+' → หมด '+fmtDT(s.end)+'</div></div><div class="prt" style="color:'+col+';">'+(isNow?'● กำลังให้':isDone?'✓ เสร็จ':'○ รอ')+'</div></div>';}).join('');
+  document.getElementById('printArea').innerHTML='<div class="ph-t">📋 แผนการให้สารน้ำ<div style="font-size:12px;color:#666;font-weight:400;margin-top:3px;">พิมพ์เมื่อ '+fmtDT(now)+'</div></div>'
+    +'<div class="pg"><div class="pi"><div class="l">ชื่อ-นามสกุล</div><div class="v">'+pt.name+'</div></div><div class="pi"><div class="l">HN/AN</div><div class="v">'+(pt.hn||'—')+'</div></div><div class="pi"><div class="l">ห้อง/เตียง</div><div class="v">'+(pt.room||'—')+'</div></div><div class="pi"><div class="l">วันเริ่ม</div><div class="v">'+(pt.start?fmtDT(st):'—')+'</div></div></div>'
+    +rows+'<div class="ptot"><span>รวมทั้งหมด</span><span style="font-weight:700;color:#0969da;">'+totalVol.toLocaleString()+' mL · '+totalHrs.toFixed(1)+' ชม.</span></div>'
+    +'<div class="pfoot"><span>IV Drip Monitor · Ward: '+currentWardName+'</span><span>ลายเซ็นพยาบาล: _______________</span></div>';
+  window.print();
+}
+
+// ── Clock & Init ───────────────────────────────────────────
+function updateClock(){}
+setInterval(function(){if(currentPtId)showDetail(currentPtId);renderPtList();},60000);
+
+// auto-restore session
+(function(){
+  try{var s=localStorage.getItem('iv_ward_pt');if(s){var w=JSON.parse(s);if(w&&w.code){enterApp(w.code,w.name);return;}}}catch(e){}
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+})();
+</script>
+</body>
+</html>
