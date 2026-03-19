@@ -10,6 +10,39 @@
 [data-theme="light"]{--bg:#f0f4f9;--surface:#fff;--surface2:#f6f8fa;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);--text:#1a2332;--muted:#656d76;--blue:#0969da;--blue-dim:rgba(9,105,218,0.1);--green:#1a7f37;--green-dim:rgba(26,127,55,0.1);--red:#cf222e;--red-dim:rgba(207,34,46,0.1);--amber:#9a6700;--amber-dim:rgba(154,103,0,0.1);--shadow:rgba(0,0,0,0.08);--tb:#f0f4f9;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s;}
+/* ── Login Screen ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:1.5rem;z-index:1000;transition:opacity .3s;}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:2rem 1.5rem;width:100%;max-width:360px;box-shadow:0 8px 32px var(--shadow);}
+.login-logo{text-align:center;margin-bottom:1.5rem;}
+.login-logo .drop{font-size:48px;line-height:1;}
+.login-logo h1{font-size:20px;font-weight:600;margin-top:8px;}
+.login-logo p{font-size:13px;color:var(--muted);margin-top:4px;}
+.login-label{font-size:14px;color:var(--muted);margin-bottom:8px;display:block;}
+/* PIN dots display */
+.pin-display{display:flex;justify-content:center;gap:12px;margin:16px 0;}
+.pin-dot{width:18px;height:18px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:all .15s;}
+.pin-dot.filled{background:var(--blue);border-color:var(--blue);}
+/* PIN numpad */
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;}
+.nkey{height:58px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--text);font-size:20px;font-weight:600;cursor:pointer;font-family:'IBM Plex Mono',monospace;transition:all .12s;display:flex;align-items:center;justify-content:center;}
+.nkey:hover{background:var(--surface);border-color:var(--blue);}
+.nkey:active{transform:scale(.94);}
+.nkey.del{font-size:16px;color:var(--muted);}
+.nkey.empty{border:none;background:transparent;cursor:default;}
+.login-btn{width:100%;height:52px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:17px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;margin-top:14px;transition:opacity .15s;}
+.login-btn:hover{opacity:.88;}
+.login-btn:disabled{opacity:.4;cursor:not-allowed;}
+.login-err{background:var(--red-dim);border:1px solid var(--red);color:var(--red);border-radius:9px;padding:10px 14px;font-size:14px;text-align:center;margin-top:12px;display:none;}
+.login-loading{text-align:center;color:var(--muted);font-size:14px;margin-top:12px;display:none;}
+/* ward badge in topbar */
+.ward-badge{background:var(--blue-dim);border:1px solid var(--blue);color:var(--blue);font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;font-family:'IBM Plex Mono',monospace;}
+.logout-btn{font-size:12px;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);}
+.logout-btn:hover{color:var(--red);border-color:var(--red);}
+/* sync indicator */
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:4px;}
+.sync-dot.syncing{background:var(--amber);animation:pulse 1s infinite;}
+.sync-dot.error{background:var(--red);}
+
 .shell{max-width:560px;margin:0 auto;padding:1rem;}
 .topbar{display:flex;align-items:center;gap:12px;padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1rem;}
 .logo-dot{width:11px;height:11px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue);flex-shrink:0;animation:pulse 2s infinite;}
@@ -148,14 +181,55 @@ input:focus,select:focus{border-color:var(--blue);}
 </style>
 </head>
 <body>
-<div class="shell">
+<!-- ── Login Screen ── -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="drop">💧</div>
+      <h1>IV Drip Monitor</h1>
+      <p>กรอก PIN ของหน่วยงาน (4-6 หลัก)</p>
+    </div>
+    <!-- PIN dots -->
+    <div class="pin-display" id="pinDisplay">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+      <div class="pin-dot" id="pd4"></div>
+      <div class="pin-dot" id="pd5"></div>
+    </div>
+    <!-- Numpad -->
+    <div class="numpad">
+      <button class="nkey" onclick="pinPress('1')">1</button>
+      <button class="nkey" onclick="pinPress('2')">2</button>
+      <button class="nkey" onclick="pinPress('3')">3</button>
+      <button class="nkey" onclick="pinPress('4')">4</button>
+      <button class="nkey" onclick="pinPress('5')">5</button>
+      <button class="nkey" onclick="pinPress('6')">6</button>
+      <button class="nkey" onclick="pinPress('7')">7</button>
+      <button class="nkey" onclick="pinPress('8')">8</button>
+      <button class="nkey" onclick="pinPress('9')">9</button>
+      <button class="nkey empty"></button>
+      <button class="nkey" onclick="pinPress('0')">0</button>
+      <button class="nkey del" onclick="pinDel()">⌫</button>
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()" disabled>เข้าใช้งาน</button>
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-loading" id="loginLoading">⏳ กำลังตรวจสอบ...</div>
+  </div>
+</div>
+
+<div class="shell" id="mainApp" style="display:none;">
 
 <div class="topbar">
   <div class="logo-dot"></div>
   <h1>IV Drip Monitor</h1>
   <div class="topbar-right">
+    <span class="sync-dot" id="syncDot"></span>
+    <span class="ward-badge" id="wardBadge">—</span>
     <span id="clockTxt">—</span>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">🌙</button>
+    <button class="logout-btn" onclick="doLogout()">ออก</button>
   </div>
 </div>
 
@@ -349,6 +423,7 @@ input:focus,select:focus{border-color:var(--blue);}
       <div class="ph">
         <span class="icon">📋</span><span class="htxt" id="ptDetailName">สรุปแผน</span>
         <div class="hright" style="display:flex;gap:6px;">
+          <button onclick="runFromPatient()" style="height:32px;padding:0 10px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">▶ รันเลย</button>
           <button onclick="printPatient()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">🖨️ PDF</button>
           <button onclick="editCurrentPt()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--blue);background:var(--blue-dim);color:var(--blue);font-size:13px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">✏️</button>
           <button onclick="deleteCurrentPt()" style="height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--red);background:var(--red-dim);color:var(--red);font-size:13px;cursor:pointer;">🗑</button>
@@ -367,7 +442,7 @@ input:focus,select:focus{border-color:var(--blue);}
   </div>
 </div>
 
-</div><!-- shell -->
+</div><!-- end shell / mainApp -->
 <div id="printArea" style="display:none;"></div>
 
 <script>
@@ -689,6 +764,24 @@ function renderPtFluidList(){
   }).join('');
 }
 function buildSchedule(fArr,startTime){var schedule=[],cursor=new Date(startTime);fArr.forEach(function(f){for(var b=0;b<(f.bottles||1);b++){var hrs=f.vol/f.rate,end=new Date(cursor.getTime()+hrs*3600000);schedule.push({name:f.name,vol:f.vol,rate:f.rate,hrs:hrs,start:new Date(cursor),end:end});cursor=new Date(end);}});return schedule;}
+
+// ── Run from Patient plan ──────────────────────────────────────
+function runFromPatient(){
+  var pt=patients.find(function(p){return p.id===currentPtId;});
+  if(!pt||!pt.fluids||pt.fluids.length===0){
+    alert('ผู้ป่วยนี้ยังไม่มีแผนสารน้ำครับ');return;
+  }
+  // โหลดแผนสารน้ำของผู้ป่วยเข้า runFluids
+  runFluids = JSON.parse(JSON.stringify(pt.fluids));
+  resetRun();
+  renderRunFluidList();
+  // สลับไป Tab รันสารน้ำ
+  switchMode('run');
+  // แจ้งชื่อผู้ป่วย
+  setTimeout(function(){
+    fireAlert('โหลดแผนของ '+pt.name+' แล้ว กด "เริ่มให้สารน้ำ"');
+  }, 300);
+}
 function renderPtList(){var el=document.getElementById('ptList');if(patients.length===0){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">ยังไม่มีผู้ป่วย</div>';return;}var now=new Date();el.innerHTML=patients.map(function(pt){var sched=buildSchedule(pt.fluids||[],pt.start?new Date(pt.start):new Date()),isAct=sched.some(function(s){return now>=s.start&&now<s.end;}),initials=(pt.name||'?').split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();return '<div class="pt-card'+(pt.id===currentPtId?' active-pt':'')+'" onclick="selectPatient(\''+pt.id+'\')">'+'<div class="pt-avatar">'+initials+'</div>'+'<div class="pt-info"><div class="pt-name">'+pt.name+'</div><div class="pt-sub">'+(pt.hn||'—')+' · '+(pt.room||'—')+'</div></div>'+'<span class="pt-badge '+(isAct?'pt-active-b':'pt-done-b')+'">'+(isAct?'กำลังให้อยู่':'รอ/เสร็จ')+'</span></div>';}).join('');}
 function showPtDetail(id){var pt=patients.find(function(p){return p.id===id;});if(!pt)return;document.getElementById('ptDetailName').textContent=pt.name;var startTime=pt.start?new Date(pt.start):new Date(),sched=buildSchedule(pt.fluids||[],startTime),totalVol=(pt.fluids||[]).reduce(function(s,f){return s+f.vol*(f.bottles||1);},0),totalHrs=sched.length>0?(sched[sched.length-1].end-startTime)/3600000:0,now=new Date();var html='<div style="background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;"><div><div style="font-size:11px;color:var(--muted);">HN/AN</div><div style="font-size:15px;font-weight:600;">'+(pt.hn||'—')+'</div></div><div><div style="font-size:11px;color:var(--muted);">ห้อง/เตียง</div><div style="font-size:15px;font-weight:600;">'+(pt.room||'—')+'</div></div><div><div style="font-size:11px;color:var(--muted);">เริ่ม</div><div style="font-size:13px;font-weight:600;">'+(pt.start?fmtDateTime(startTime):'—')+'</div></div><div><div style="font-size:11px;color:var(--muted);">ปริมาณรวม</div><div style="font-size:13px;font-weight:600;">'+totalVol.toLocaleString()+' mL</div></div></div>';if(sched.length===0){html+='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem;">ยังไม่มีแผนสารน้ำ</div>';}else{sched.forEach(function(s,i){var isNow=now>=s.start&&now<s.end,isDone=now>=s.end,col=isNow?'var(--green)':isDone?'var(--muted)':'var(--blue)',bg=isNow?'var(--green-dim)':isDone?'var(--surface2)':'var(--blue-dim)';html+='<div style="background:'+bg+';border:1px solid '+col+';border-radius:10px;padding:10px 12px;margin-bottom:8px;"><div style="display:flex;justify-content:space-between;margin-bottom:4px;"><span style="font-size:14px;font-weight:600;color:'+col+';">ขวดที่ '+(i+1)+' — '+s.name+'</span><span style="font-size:11px;color:'+col+';">'+(isNow?'● กำลังให้':isDone?'✓ เสร็จ':'○ รอ')+'</span></div><div style="font-size:12px;color:var(--muted);">'+s.vol+' mL · '+s.rate+' mL/ชม. · '+s.hrs.toFixed(1)+' ชม.<br>เริ่ม '+fmtDateTime(s.start)+' → หมด '+fmtDateTime(s.end)+'</div></div>';});html+='<div style="background:var(--surface2);border-radius:10px;padding:10px 13px;display:flex;justify-content:space-between;"><span style="font-size:14px;color:var(--muted);">รวม</span><span style="font-size:15px;font-weight:600;">'+totalVol.toLocaleString()+' mL / '+totalHrs.toFixed(1)+' ชม.</span></div>';}document.getElementById('ptSummary').innerHTML=html;document.getElementById('ptDetail').style.display='block';}
 function setupAllAlerts(){alertTimers.forEach(clearTimeout);alertTimers=[];var now=Date.now();patients.forEach(function(pt){var sched=buildSchedule(pt.fluids||[],pt.start?new Date(pt.start):new Date());sched.forEach(function(s,i){var endMs=s.end.getTime();if(endMs<=now)return;if(ptAlerts.a15){var t=endMs-15*60000-now;if(t>0)alertTimers.push(setTimeout(function(){fireAlert(pt.name+' — ขวดที่'+(i+1)+' จะหมดใน 15 นาที');},t));}if(ptAlerts.a30){var t=endMs-30*60000-now;if(t>0)alertTimers.push(setTimeout(function(){fireAlert(pt.name+' — ขวดที่'+(i+1)+' จะหมดใน 30 นาที');},t));}alertTimers.push(setTimeout(function(){fireAlert('⚠️ '+pt.name+' ขวดที่'+(i+1)+' ('+s.name+') หมดแล้ว!');renderPtList();if(currentPtId===pt.id)showPtDetail(pt.id);},endMs-now));});}); }
@@ -707,8 +800,191 @@ function updateClock(){document.getElementById('clockTxt').textContent=new Date(
 setInterval(updateClock,1000);updateClock();
 setInterval(function(){if(currentPtId)showPtDetail(currentPtId);renderPtList();},60000);
 
-// ══ INIT ══
-loadPt();renderPtList();setupAllAlerts();
+// ══════════════════════════════════════════
+// AUTH + API SYSTEM
+// ══════════════════════════════════════════
+
+// ← วาง URL ของ Apps Script ที่ Deploy แล้วตรงนี้
+var API_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+var currentWard = null;
+var currentWardName = '';
+var pinBuffer = '';
+
+// ── PIN Numpad ────────────────────────────────────────────────
+function pinPress(d){
+  if(pinBuffer.length >= 6) return;
+  pinBuffer += d;
+  updatePinDots();
+  document.getElementById('loginErr').style.display='none';
+  // auto-submit when 6 digits
+  if(pinBuffer.length >= 4){
+    document.getElementById('loginBtn').disabled = false;
+  }
+  if(pinBuffer.length === 6) setTimeout(doLogin, 200);
+}
+
+function pinDel(){
+  if(pinBuffer.length === 0) return;
+  pinBuffer = pinBuffer.slice(0,-1);
+  updatePinDots();
+  document.getElementById('loginBtn').disabled = pinBuffer.length < 4;
+}
+
+function updatePinDots(){
+  for(var i=0;i<6;i++){
+    document.getElementById('pd'+i).classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+// keyboard support
+document.addEventListener('keydown', function(e){
+  if(document.getElementById('loginScreen').style.display==='none') return;
+  if(e.key>='0'&&e.key<='9') pinPress(e.key);
+  else if(e.key==='Backspace') pinDel();
+  else if(e.key==='Enter' && pinBuffer.length>=4) doLogin();
+});
+
+// ── Login ────────────────────────────────────────────────────
+function doLogin(){
+  if(pinBuffer.length < 4){ showLoginErr('PIN ต้องมีอย่างน้อย 4 หลัก'); return; }
+  var pin = pinBuffer;
+
+  if(API_URL === 'YOUR_APPS_SCRIPT_URL_HERE'){
+    offlineLogin(pin);
+    return;
+  }
+
+  setLoginLoading(true);
+  apiCall({action:'login', code:pin})
+    .then(function(res){
+      setLoginLoading(false);
+      if(res.ok){
+        enterApp(res.wardCode, res.wardName);
+      } else {
+        showLoginErr(res.error || 'PIN ไม่ถูกต้อง');
+        pinBuffer=''; updatePinDots();
+        document.getElementById('loginBtn').disabled=true;
+      }
+    })
+    .catch(function(){
+      setLoginLoading(false);
+      offlineLogin(pin);
+    });
+}
+
+function offlineLogin(pin){
+  enterApp(pin, 'Ward-'+pin);
+}
+
+function enterApp(wardCode, wardName){
+  currentWard = wardCode;
+  currentWardName = wardName;
+  try{ localStorage.setItem('iv_ward', JSON.stringify({code:wardCode,name:wardName})); }catch(e){}
+  document.getElementById('loginScreen').style.opacity='0';
+  setTimeout(function(){document.getElementById('loginScreen').style.display='none';},300);
+  document.getElementById('mainApp').style.display='block';
+  document.getElementById('wardBadge').textContent=wardName;
+  setSyncDot('ok');
+  pinBuffer=''; updatePinDots();
+  document.getElementById('loginBtn').disabled=true;
+  loadPtFromServer();
+}
+
+function doLogout(){
+  if(!confirm('ออกจากระบบ '+currentWardName+'?')) return;
+  currentWard=null; currentWardName=''; currentPtId=null;
+  try{localStorage.removeItem('iv_ward');}catch(e){}
+  patients=[];
+  document.getElementById('mainApp').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('loginScreen').style.opacity='1';
+  pinBuffer=''; updatePinDots();
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('loginBtn').disabled=true;
+}
+
+function showLoginErr(msg){
+  var el=document.getElementById('loginErr');
+  el.textContent=msg; el.style.display='block';
+}
+function setLoginLoading(on){
+  document.getElementById('loginBtn').disabled=on;
+  document.getElementById('loginLoading').style.display=on?'block':'none';
+  document.getElementById('loginErr').style.display='none';
+}
+
+// ── Sync dot ─────────────────────────────────────────────────
+function setSyncDot(state){
+  var d=document.getElementById('syncDot');
+  d.className='sync-dot'+(state==='syncing'?' syncing':state==='error'?' error':'');
+}
+
+// ── API call ─────────────────────────────────────────────────
+function apiCall(data){
+  return fetch(API_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(Object.assign({ward:currentWard,code:currentWard},data))
+  }).then(function(r){return r.json();});
+}
+
+// ── Load patients ─────────────────────────────────────────────
+function loadPtFromServer(){
+  if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE'){
+    loadPt(); renderPtList(); setupAllAlerts(); return;
+  }
+  setSyncDot('syncing');
+  apiCall({action:'getPatients'})
+    .then(function(res){
+      setSyncDot('ok');
+      if(res.ok){
+        patients=res.patients||[];
+        try{localStorage.setItem('iv_pts_'+currentWard,JSON.stringify(patients));}catch(e){}
+        renderPtList(); setupAllAlerts();
+      }
+    })
+    .catch(function(){
+      setSyncDot('error');
+      try{var d=localStorage.getItem('iv_pts_'+currentWard);if(d)patients=JSON.parse(d);}catch(e){}
+      renderPtList(); setupAllAlerts();
+    });
+}
+
+function loadPt(){
+  try{var d=localStorage.getItem('iv_pts_'+(currentWard||'local'));if(d)patients=JSON.parse(d);}catch(e){patients=[];}
+}
+function savePt(){
+  try{localStorage.setItem('iv_pts_'+(currentWard||'local'),JSON.stringify(patients));}catch(e){}
+}
+
+// server sync wrappers
+var _origSave=savePatient;
+savePatient=function(){
+  _origSave();
+  if(API_URL!=='YOUR_APPS_SCRIPT_URL_HERE'&&currentWard){
+    var pt=patients.find(function(p){return p.id===currentPtId;});
+    if(pt){setSyncDot('syncing');apiCall({action:'savePatient',patient:pt}).then(function(r){setSyncDot(r.ok?'ok':'error');}).catch(function(){setSyncDot('error');});}
+  }
+};
+var _origDel=deleteCurrentPt;
+deleteCurrentPt=function(){
+  var id=currentPtId;_origDel();
+  if(API_URL!=='YOUR_APPS_SCRIPT_URL_HERE'&&currentWard&&id){
+    setSyncDot('syncing');apiCall({action:'deletePatient',patientId:id}).then(function(r){setSyncDot(r.ok?'ok':'error');}).catch(function(){setSyncDot('error');});
+  }
+};
+
+// ── Auto-restore session ──────────────────────────────────────
+(function(){
+  try{
+    var s=localStorage.getItem('iv_ward');
+    if(s){var w=JSON.parse(s);if(w&&w.code){enterApp(w.code,w.name);return;}}
+  }catch(e){}
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('mainApp').style.display='none';
+})();
+
 </script>
 </body>
 </html>
