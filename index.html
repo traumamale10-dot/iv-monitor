@@ -814,7 +814,7 @@ function doLogout(){if(!confirm('ออกจากระบบ?'))return;curren
 function setSyncDot(s){var d=document.getElementById('syncDot');d.className='sync-dot'+(s==='syncing'?' syncing':s==='err'?' err':'');}
 function apiCall(data){return fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({ward:currentWard,code:currentWard},data))}).then(function(r){return r.json();});}
 function loadFromServer(){
-  if(API_URL==='YOUR_APPS_SCRIPT_URL_HERE'){loadLocal();renderPtList();setupAlerts();return;}
+  if(API_URL==='https://script.google.com/macros/s/AKfycbwPCdRkjCwbp-v5RL2ho4nCJEd-Guj9elL9-U0w2RwG1HDxD4sln6bSXIUe4Oe-BCfc/exec'){loadLocal();renderPtList();setupAlerts();return;}
   setSyncDot('syncing');
   apiCall({action:'getPatients'}).then(function(r){setSyncDot('ok');if(r.ok){patients=r.patients||[];saveLocal();renderPtList();setupAlerts();}}).catch(function(){setSyncDot('err');loadLocal();renderPtList();setupAlerts();});
 }
