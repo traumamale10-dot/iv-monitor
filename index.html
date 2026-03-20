@@ -17,17 +17,15 @@ body{font-family:'IBM Plex Sans Thai',sans-serif;background:var(--bg);color:var(
 .topbar h1{font-size:18px;font-weight:600;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 #clockTxt{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);}
-.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}
-.icon-btn:hover{border-color:var(--blue);}
-.pt-link{height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;text-decoration:none;font-family:'IBM Plex Sans Thai',sans-serif;}
-.pt-link:hover{opacity:.85;}
+.icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid var(--border2);background:var(--surface2);color:var(--text);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pt-link{height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;text-decoration:none;font-family:'IBM Plex Sans Thai',sans-serif;}
 /* tabs */
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:1rem;}
 .tab{height:48px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted);font-family:'IBM Plex Sans Thai',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;}
 .tab.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
 .section{display:none;}.section.active{display:block;}
 /* panel */
-.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);margin-bottom:1rem;transition:background .25s;}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px var(--shadow);margin-bottom:1rem;}
 .ph{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--border);background:var(--surface2);}
 .ph .icon{font-size:15px;}.ph .htxt{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}.ph .hright{margin-left:auto;}
 .pb{padding:16px;}
@@ -44,48 +42,28 @@ input:focus,select:focus{border-color:var(--blue);}
 .set-btn{padding:12px 4px;border-radius:10px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--text);font-family:'IBM Plex Sans Thai',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;}
 .set-btn .sub{display:block;font-size:11px;font-weight:400;color:var(--muted);margin-top:3px;}
 .set-btn.active{background:var(--blue-dim);border-color:var(--blue);color:var(--blue);}
-/* calc mode toggle */
+/* calc mode */
 .calc-toggle{display:flex;border:1px solid var(--border2);border-radius:9px;overflow:hidden;margin-bottom:14px;}
-.ctab{flex:1;height:36px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--surface2);color:var(--muted);transition:all .15s;}
+.ctab{flex:1;height:36px;border:none;font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;background:var(--surface2);color:var(--muted);}
 .ctab.active{background:var(--blue);color:#fff;}
 /* metrics */
-.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
 .metric{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 14px;}
 .metric .v{font-size:22px;font-weight:600;color:var(--text);font-family:'IBM Plex Mono',monospace;line-height:1.1;}
 .metric .l{font-size:12px;color:var(--muted);margin-top:4px;}
-/* fluid plan run */
-.fluid-item{background:var(--surface2);border:1.5px solid var(--border2);border-radius:12px;padding:13px;margin-bottom:10px;}
-.fluid-item.current{border-color:var(--green);background:var(--green-dim);}
-.fluid-item.done{opacity:.5;}
-.fi-head{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.fi-num{width:28px;height:28px;border-radius:50%;background:var(--blue-dim);color:var(--blue);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.fi-num.cur{background:var(--green-dim);color:var(--green);}
-.fi-num.dn{background:var(--surface);color:var(--muted);}
-.fi-status{font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;}
-.fi-st-wait{background:var(--surface);color:var(--muted);border:1px solid var(--border2);}
-.fi-st-run{background:var(--green-dim);color:var(--green);border:1px solid var(--green);}
-.fi-st-done{background:var(--surface2);color:var(--muted);border:1px solid var(--border2);}
-/* beat */
+/* beat ring */
 .beat-center{display:flex;flex-direction:column;align-items:center;padding:.5rem 0;}
 .beat-ring{width:110px;height:110px;border-radius:50%;border:3px solid var(--border2);display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:10px;transition:border-color .1s,box-shadow .1s;}
 .beat-ring.flash{border-color:var(--blue);box-shadow:0 0 24px rgba(47,129,247,0.5);}
-.beat-num{font-size:28px;font-weight:600;font-family:'IBM Plex Mono',monospace;line-height:1;}
+.beat-num{font-size:30px;font-weight:600;font-family:'IBM Plex Mono',monospace;line-height:1;}
 .beat-sub{font-size:11px;color:var(--muted);margin-top:2px;}
 .cbar{width:100%;height:5px;background:var(--border2);border-radius:3px;margin-top:10px;overflow:hidden;}
 .cfill{height:5px;background:var(--blue);border-radius:3px;width:100%;}
-/* cur bottle */
-.cur-bottle{background:var(--green-dim);border:1px solid var(--green);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
-.cur-bottle .cb-name{font-size:14px;font-weight:600;color:var(--green);flex:1;}
-.cur-bottle .cb-info{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);}
-.next-alert{background:var(--amber-dim);border:1px solid var(--amber);border-radius:10px;padding:11px 14px;margin-bottom:10px;text-align:center;display:none;}
-.next-alert .na-t{font-size:14px;font-weight:600;color:var(--amber);}
-.next-alert .na-s{font-size:12px;color:var(--muted);margin-top:3px;}
 /* buttons */
 .btn-row{display:flex;gap:10px;margin-top:12px;}
 .btn-main{flex:2;height:52px;border-radius:12px;border:none;background:var(--blue);color:#fff;font-size:17px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;transition:opacity .15s;}
 .btn-main:hover{opacity:.88;}
-.btn-main:disabled{opacity:.3;cursor:not-allowed;}
-.btn-sec{flex:1;height:52px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted);font-size:15px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;transition:all .15s;}
+.btn-sec{flex:1;height:52px;border-radius:12px;border:1.5px solid var(--border2);background:var(--surface2);color:var(--muted);font-size:15px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;}
 .btn-sec:hover{border-color:var(--red);color:var(--red);}
 /* toggle */
 .togrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -119,10 +97,6 @@ input:focus,select:focus{border-color:var(--blue);}
 .graph-strip{height:64px;background:var(--surface2);border-radius:9px;overflow:hidden;position:relative;}
 #cvGraph{width:100%;height:100%;display:block;}
 .hint{font-size:13px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.5;}
-/* loaded plan banner */
-.plan-banner{background:var(--green-dim);border:1px solid var(--green);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:none;align-items:center;gap:10px;}
-.plan-banner .pb-name{font-size:14px;font-weight:600;color:var(--green);flex:1;}
-.plan-banner button{height:28px;padding:0 10px;border-radius:7px;border:1px solid var(--green);background:transparent;color:var(--green);font-size:12px;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;}
 </style>
 </head>
 <body>
@@ -138,16 +112,14 @@ input:focus,select:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- Tabs -->
 <div class="tabs">
-  <button class="tab active" id="tabCalc" onclick="switchTab('calc')">🧮 คำนวณ + รันจังหวะ</button>
-  <button class="tab" id="tabCam" onclick="switchTab('cam')">📷 ตรวจนับหยด</button>
+  <button class="tab active" id="tabCalc" onclick="switchTab('calc')">🧮 คำนวณ + จังหวะ</button>
+  <button class="tab" id="tabCam" onclick="switchTab('cam')">📷 นับหยด</button>
 </div>
 
-<!-- ══ CALC + RUN ══ -->
+<!-- ══ คำนวณ + Metronome ══ -->
 <div class="section active" id="secCalc">
 
-  <!-- IV Set -->
   <div class="panel">
     <div class="ph"><span class="icon">💉</span><span class="htxt">ชนิด Set น้ำเกลือ</span></div>
     <div class="pb">
@@ -159,7 +131,6 @@ input:focus,select:focus{border-color:var(--blue);}
     </div>
   </div>
 
-  <!-- Calc -->
   <div class="panel">
     <div class="ph">
       <span class="icon">🧮</span><span class="htxt">คำนวณอัตราน้ำเกลือ</span>
@@ -171,15 +142,15 @@ input:focus,select:focus{border-color:var(--blue);}
       </div>
     </div>
     <div class="pb">
-      <div id="inputVolMode">
+      <div id="modeVol">
         <div class="irow"><label>ปริมาณสารละลาย</label><input type="number" id="inVol" value="500" min="50" max="3000" oninput="calculate()"><span class="unit">mL</span></div>
         <div class="irow"><label>เวลาที่ต้องการ</label><input type="number" id="inHrs" value="8" min="0.5" max="24" step="0.5" oninput="calculate()"><span class="unit">ชม.</span></div>
       </div>
-      <div id="inputCCMode" style="display:none;">
+      <div id="modeCC" style="display:none;">
         <div class="irow"><label>อัตราที่ต้องการ</label><input type="number" id="inCChr" value="62" min="1" max="999" oninput="calculate()"><span class="unit">CC/ชม.</span></div>
         <div class="irow"><label>ปริมาณรวม</label><input type="number" id="inVolCC" value="500" min="50" max="3000" oninput="calculate()"><span class="unit">mL</span></div>
       </div>
-      <div class="mgrid" style="margin-top:12px;">
+      <div class="mgrid">
         <div class="metric"><div class="v" id="mMl">62.5</div><div class="l">mL / ชั่วโมง</div></div>
         <div class="metric"><div class="v" id="mMlMin">1.04</div><div class="l">mL / นาที</div></div>
         <div class="metric"><div class="v" id="mGtt">21</div><div class="l">หยด / นาที</div></div>
@@ -190,82 +161,48 @@ input:focus,select:focus{border-color:var(--blue);}
     </div>
   </div>
 
-  <!-- Fluid run plan -->
   <div class="panel">
-    <div class="ph">
-      <span class="icon">💧</span><span class="htxt">แผนสารน้ำ</span>
-      <div class="hright"><button onclick="addRunFluid()" style="height:30px;padding:0 12px;border-radius:7px;border:1px solid var(--green);background:var(--green-dim);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">+ เพิ่ม</button></div>
-    </div>
+    <div class="ph"><span class="icon">🔔</span><span class="htxt">จังหวะหยด (Metronome)</span></div>
     <div class="pb">
-      <!-- plan loaded from patient banner -->
-      <div class="plan-banner" id="planBanner">
-        <span class="pb-name" id="planBannerName">โหลดแผนจากผู้ป่วย</span>
-        <button onclick="clearPlan()">✕ ล้าง</button>
-      </div>
-      <div id="runFluidList"><div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">กด "+ เพิ่ม" หรือโหลดจากหน้าผู้ป่วย</div></div>
-    </div>
-  </div>
-
-  <!-- Run control -->
-  <div class="panel" id="runPanel" style="display:none;">
-    <div class="ph"><span class="icon">▶</span><span class="htxt" id="runPanelTitle">กำลังให้สารน้ำ</span></div>
-    <div class="pb">
-      <div class="cur-bottle" id="curBottle">
-        <div class="cb-name" id="curName">—</div>
-        <div class="cb-info" id="curTime">—</div>
-      </div>
-      <div class="next-alert" id="nextAlert">
-        <div class="na-t">⚠️ ใกล้หมดขวดแล้ว!</div>
-        <div class="na-s" id="nextAlertSub">เตรียมขวดถัดไป</div>
-      </div>
       <div class="beat-center">
         <div class="beat-ring" id="beatRing">
           <span class="beat-num" id="beatNum">—</span>
           <span class="beat-sub">หยดที่</span>
         </div>
         <div class="cbar"><div class="cfill" id="cntFill"></div></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;text-align:center;min-height:16px;" id="beatInfo">—</div>
-      </div>
-      <div style="margin-top:10px;">
-        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;">
-          <span id="bottleProgress">ขวดที่ — / —</span><span id="bottlePct">0%</span>
-        </div>
-        <div style="height:5px;background:var(--border2);border-radius:3px;"><div id="bottlePctBar" style="height:5px;background:var(--green);border-radius:3px;width:0%;transition:width .5s;"></div></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin-top:8px;text-align:center;" id="beatInfo">กด "เริ่มจังหวะ" เพื่อเริ่ม</div>
       </div>
       <div class="btn-row">
-        <button class="btn-main" id="runBtn" onclick="toggleRun()">เริ่มให้สารน้ำ</button>
-        <button class="btn-sec" onclick="resetRun()">รีเซ็ต</button>
+        <button class="btn-main" id="metroBtn" onclick="toggleMetro()">เริ่มจังหวะ</button>
+        <button class="btn-sec" onclick="resetMetro()">รีเซ็ต</button>
       </div>
     </div>
   </div>
 
-  <!-- Status list -->
-  <div class="panel" id="runStatusPanel" style="display:none;">
-    <div class="ph"><span class="icon">📋</span><span class="htxt">สถานะสารน้ำ</span></div>
-    <div class="pb" id="runStatusList"></div>
-  </div>
-
-  <!-- Sound -->
   <div class="panel">
     <div class="ph"><span class="icon">🔊</span><span class="htxt">เสียง</span></div>
     <div class="pb">
       <div class="togrow"><span class="toglabel">เสียงจังหวะหยด</span><div class="tog-wrap"><button class="tog on" id="togM" onclick="toggleSoundM()"><div class="knob"></div></button><span class="tlab" id="lblM">เปิด</span></div></div>
-      <div class="togrow"><span class="toglabel">นับเสียง (1,2,3...)</span><div class="tog-wrap"><button class="tog on" id="togCount" onclick="toggleCount()"><div class="knob"></div></button><span class="tlab" id="lblCount">เปิด</span></div></div>
+      <div class="togrow"><span class="toglabel">นับเสียง (1, 2, 3...)</span><div class="tog-wrap"><button class="tog on" id="togCount" onclick="toggleCount()"><div class="knob"></div></button><span class="tlab" id="lblCount">เปิด</span></div></div>
       <div class="slider-row" style="margin-bottom:0;"><label>ระดับเสียง</label><input type="range" id="sVolM" min="0" max="1" step="0.05" value="0.7" oninput="updateVolM()"><span class="sval" id="vVolM">70%</span></div>
     </div>
   </div>
 
 </div><!-- end secCalc -->
 
-<!-- ══ CAMERA ══ -->
+<!-- ══ Camera ══ -->
 <div class="section" id="secCam">
+
   <div class="panel">
     <div class="ph"><span class="icon">📷</span><span class="htxt">กล้องตรวจจับ</span><span class="hright" style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);" id="fpsLabel">— fps</span></div>
     <div class="pb">
       <div class="cam-outer">
         <video id="vid" autoplay playsinline muted></video>
         <canvas id="cvOverlay"></canvas><canvas id="cvProc"></canvas>
-        <div class="cam-ph" id="placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>กดปุ่ม "เปิดกล้อง"</div>
+        <div class="cam-ph" id="placeholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+          กดปุ่ม "เปิดกล้อง"
+        </div>
       </div>
       <div class="cam-tb">
         <button class="tbtn primary" id="btnOpen" onclick="openCamera()">เปิดกล้อง</button>
@@ -275,25 +212,29 @@ input:focus,select:focus{border-color:var(--blue);}
       <p class="hint">แตะบนภาพเพื่อย้าย ROI (กรอบตรวจจับ)</p>
     </div>
   </div>
+
   <div class="panel">
     <div class="ph"><span class="icon">🎯</span><span class="htxt">Auto Calibration</span></div>
     <div class="pb">
       <div style="background:var(--surface2);border:1px solid var(--border2);border-radius:10px;padding:14px;">
         <div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:10px;">1. เปิดกล้อง จัด ROI ให้ตรงหยด<br>2. กด <b>"เริ่ม Calibrate"</b> รอ 15 วินาที<br>3. ระบบตั้ง Threshold อัตโนมัติ</div>
-        <div class="cs cs-idle" id="calibStatus" style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 12px;border-radius:8px;margin-bottom:10px;text-align:center;background:var(--surface);color:var(--muted);border:1px solid var(--border2);">รอเริ่ม Calibration</div>
-        <button style="width:100%;height:44px;border-radius:9px;border:none;background:var(--amber);color:#000;font-size:15px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;" id="calibBtn" onclick="startCalib()" disabled>เริ่ม Calibrate</button>
+        <div id="calibStatus" style="font-family:'IBM Plex Mono',monospace;font-size:13px;padding:8px 12px;border-radius:8px;margin-bottom:10px;text-align:center;background:var(--surface);color:var(--muted);border:1px solid var(--border2);">รอเริ่ม Calibration</div>
+        <button id="calibBtn" onclick="startCalib()" disabled style="width:100%;height:44px;border-radius:9px;border:none;background:var(--amber);color:#000;font-size:15px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans Thai',sans-serif;">เริ่ม Calibrate</button>
       </div>
     </div>
   </div>
+
   <div class="panel">
     <div class="ph"><span class="icon">📈</span><span class="htxt">กราฟสัญญาณ</span></div>
     <div class="pb" style="padding:12px 16px;">
-      <div class="graph-strip"><canvas id="cvGraph"></canvas>
+      <div class="graph-strip">
+        <canvas id="cvGraph"></canvas>
         <span style="position:absolute;top:7px;left:10px;font-family:monospace;font-size:11px;color:var(--muted);">Pixel Δ</span>
-        <span style="position:absolute;right:10px;top:7px;font-family:monospace;font-size:11px;color:var(--amber);" id="threshLine">threshold: 25</span>
+        <span id="threshLine" style="position:absolute;right:10px;top:7px;font-family:monospace;font-size:11px;color:var(--amber);">threshold: 25</span>
       </div>
     </div>
   </div>
+
   <div class="panel">
     <div class="ph"><span class="icon">⚙️</span><span class="htxt">ปรับค่าตรวจจับ</span></div>
     <div class="pb">
@@ -303,20 +244,22 @@ input:focus,select:focus{border-color:var(--blue);}
       <div class="slider-row"><label>Blur kernel</label><input type="range" id="sBlur" min="0" max="5" value="1" step="1" oninput="updateBlur()"><span class="sval" id="vBlur">1</span></div>
     </div>
   </div>
+
   <div class="panel">
     <div class="ph"><span class="icon">💧</span><span class="htxt">จำนวนหยดที่นับได้</span></div>
     <div class="pb">
       <div style="text-align:center;padding:.5rem 0 .25rem;">
-        <div style="font-size:52px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue);" id="camDropCount">0</div>
+        <div style="font-size:56px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--blue);" id="camDropCount">0</div>
         <div style="font-size:13px;color:var(--muted);">หยด</div>
       </div>
       <div style="font-size:13px;text-align:center;margin-top:6px;min-height:18px;color:var(--muted);" id="camRateInfo"></div>
       <div class="btn-row">
-        <button class="btn-main" id="btnCamStart" onclick="toggleCamMonitor()">เริ่มตรวจจับ</button>
+        <button class="btn-main" id="btnCamStart" onclick="toggleCam()">เริ่มตรวจจับ</button>
         <button class="btn-sec" onclick="resetCam()">รีเซ็ต</button>
       </div>
     </div>
   </div>
+
   <div class="panel">
     <div class="ph"><span class="icon">🔊</span><span class="htxt">เสียง</span></div>
     <div class="pb">
@@ -324,30 +267,31 @@ input:focus,select:focus{border-color:var(--blue);}
       <div class="slider-row" style="margin-top:12px;margin-bottom:0;"><label>ระดับเสียง</label><input type="range" id="sVolC" min="0" max="1" step="0.05" value="0.7" oninput="updateVolC()"><span class="sval" id="vVolC">70%</span></div>
     </div>
   </div>
-</div><!-- end secCam -->
 
+</div><!-- end secCam -->
 </div><!-- shell -->
+
 <script>
 var isDark=true, aCtx=null, ivSet=20, calcModeV='vol';
 var synth=window.speechSynthesis||null;
-var FLUID_OPTS=['NSS (0.9% NaCl)','5%D/NSS','5%D/W','Ringer\'s Lactate (RL)','กำหนดเอง'];
 
 function toggleTheme(){isDark=!isDark;document.documentElement.setAttribute('data-theme',isDark?'dark':'light');document.getElementById('themeBtn').textContent=isDark?'🌙':'☀️';}
-function switchTab(t){['Calc','Cam'].forEach(function(n){document.getElementById('tab'+n).classList.toggle('active',n.toLowerCase()===t);document.getElementById('sec'+n).classList.toggle('active',n.toLowerCase()===t);});if(t!=='cam')stopCamMonitor();}
+function switchTab(t){['Calc','Cam'].forEach(function(n){document.getElementById('tab'+n).classList.toggle('active',n.toLowerCase()===t);document.getElementById('sec'+n).classList.toggle('active',n.toLowerCase()===t);});if(t!=='cam')stopCam();}
 
 // ── Audio ──────────────────────────────────────────────────
 function ac(){if(!aCtx)aCtx=new(window.AudioContext||window.webkitAudioContext)();return aCtx;}
 function tone(f1,f2,dur,g){try{var c=ac(),o=c.createOscillator(),gn=c.createGain();o.connect(gn);gn.connect(c.destination);o.type='sine';o.frequency.setValueAtTime(f1,c.currentTime);if(f2)o.frequency.exponentialRampToValueAtTime(f2,c.currentTime+dur*.7);gn.gain.setValueAtTime(g,c.currentTime);gn.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);o.start(c.currentTime);o.stop(c.currentTime+dur);}catch(e){}}
-function speakTh(t){if(!synth)return;try{synth.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='th-TH';u.rate=1.5;u.volume=volM;synth.speak(u);}catch(e){}}
+function speakTh(t){if(!synth||!countOn)return;try{synth.cancel();var u=new SpeechSynthesisUtterance(t);u.lang='th-TH';u.rate=1.5;u.volume=volM;synth.speak(u);}catch(e){}}
 
 // ── IV Set & Calc ──────────────────────────────────────────
+var targetSec=0;
 function selectSet(n){ivSet=n;[15,20,60].forEach(function(v){document.getElementById('btn'+v).classList.toggle('active',v===n);});calculate();}
-function setCalcMode(m){calcModeV=m;document.getElementById('inputVolMode').style.display=m==='vol'?'block':'none';document.getElementById('inputCCMode').style.display=m==='cc'?'block':'none';document.getElementById('ctVol').classList.toggle('active',m==='vol');document.getElementById('ctCC').classList.toggle('active',m==='cc');calculate();}
+function setCalcMode(m){calcModeV=m;document.getElementById('modeVol').style.display=m==='vol'?'block':'none';document.getElementById('modeCC').style.display=m==='cc'?'block':'none';document.getElementById('ctVol').classList.toggle('active',m==='vol');document.getElementById('ctCC').classList.toggle('active',m==='cc');calculate();}
 function calculate(){
   var mlHr,v,h;
   if(calcModeV==='cc'){mlHr=parseFloat(document.getElementById('inCChr').value)||62;v=parseFloat(document.getElementById('inVolCC').value)||500;h=v/mlHr;}
   else{v=parseFloat(document.getElementById('inVol').value)||500;h=parseFloat(document.getElementById('inHrs').value)||8;mlHr=v/h;}
-  var mlMin=mlHr/60,gttMin=(mlHr*ivSet)/60;
+  var mlMin=mlHr/60, gttMin=(mlHr*ivSet)/60;
   targetSec=60/gttMin;
   document.getElementById('mMl').textContent=mlHr.toFixed(1);
   document.getElementById('mMlMin').textContent=mlMin.toFixed(2);
@@ -355,169 +299,78 @@ function calculate(){
   document.getElementById('mSec').textContent=targetSec.toFixed(1);
   document.getElementById('mTotal').textContent=Math.round(v*ivSet).toLocaleString();
   document.getElementById('mHrs').textContent=h.toFixed(1);
-}
-var targetSec=0;
-
-// ══ RUN MODE ═══════════════════════════════════════════════
-var runFluids=[], soundMOn=true, countOn=true, volM=0.7;
-var isRunning=false, currentBottleIdx=0, bottleBeat=0, bottleDropTotal=0;
-var waitingForNext=false, beatTimeout=null;
-
-function addRunFluid(){runFluids.push({id:'rf'+Date.now(),name:'NSS (0.9% NaCl)',vol:500,rate:80,bottles:1});renderRunFluidList();}
-function removeRunFluid(id){runFluids=runFluids.filter(function(f){return f.id!==id;});renderRunFluidList();}
-function updateRunFluid(id,field,val){runFluids.forEach(function(f){if(f.id===id)f[field]=field==='name'?val:(parseFloat(val)||0);});}
-function clearPlan(){runFluids=[];document.getElementById('planBanner').style.display='none';renderRunFluidList();}
-
-function renderRunFluidList(){
-  var el=document.getElementById('runFluidList');
-  if(runFluids.length===0){el.innerHTML='<div style="text-align:center;color:var(--muted);font-size:14px;padding:1rem 0;">กด "+ เพิ่ม" หรือโหลดจากหน้าผู้ป่วย</div>';document.getElementById('runPanel').style.display='none';document.getElementById('runStatusPanel').style.display='none';return;}
-  el.innerHTML=runFluids.map(function(f,i){
-    return '<div style="background:var(--surface2);border:1.5px solid var(--border2);border-radius:11px;padding:12px;margin-bottom:10px;">'
-      +'<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">'
-      +'<select onchange="updateRunFluid(\''+f.id+'\',\'name\',this.value)" style="flex:1;height:38px;font-size:14px;">'
-      +FLUID_OPTS.map(function(o){return '<option value="'+o+'"'+(f.name===o?' selected':'')+'>'+o+'</option>';}).join('')
-      +'</select>'
-      +'<button onclick="removeRunFluid(\''+f.id+'\')" style="width:30px;height:30px;border-radius:7px;border:1px solid var(--red);background:var(--red-dim);color:var(--red);font-size:14px;cursor:pointer;flex-shrink:0;">✕</button>'
-      +'</div>'
-      +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">'
-      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">mL/ขวด</div><input type="number" value="'+f.vol+'" min="50" max="2000" step="50" style="height:38px;font-size:15px;" onchange="updateRunFluid(\''+f.id+'\',\'vol\',this.value)"></div>'
-      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">mL/ชม.</div><input type="number" value="'+f.rate+'" min="1" max="999" style="height:38px;font-size:15px;" onchange="updateRunFluid(\''+f.id+'\',\'rate\',this.value)"></div>'
-      +'<div><div style="font-size:11px;color:var(--muted);margin-bottom:3px;">จำนวนขวด</div><input type="number" value="'+f.bottles+'" min="1" max="20" style="height:38px;font-size:15px;" onchange="updateRunFluid(\''+f.id+'\',\'bottles\',this.value)"></div>'
-      +'</div></div>';
-  }).join('');
-  document.getElementById('runPanel').style.display='block';
-  document.getElementById('runStatusPanel').style.display='block';
-  renderRunStatus();
+  document.getElementById('beatInfo').textContent=isMetroOn?Math.round(gttMin)+' gtt/min · '+targetSec.toFixed(1)+' วิ/หยด':'กด "เริ่มจังหวะ" เพื่อเริ่ม';
 }
 
-function buildRunSeq(){var seq=[];runFluids.forEach(function(f){for(var b=0;b<(f.bottles||1);b++)seq.push({name:f.name,vol:f.vol,rate:f.rate});});return seq;}
-
-function renderRunStatus(){
-  var el=document.getElementById('runStatusList');
-  var seq=buildRunSeq();
-  if(seq.length===0){el.innerHTML='';return;}
-  el.innerHTML=seq.map(function(s,i){
-    var isCur=isRunning&&i===currentBottleIdx,isDone=isRunning&&i<currentBottleIdx;
-    var cls=isCur?'current':isDone?'done':'';
-    var numCls=isCur?'cur':isDone?'dn':'';
-    var stCls=isCur?'fi-st-run':isDone?'fi-st-done':'fi-st-wait';
-    var stTxt=isCur?'● กำลังให้':isDone?'✓ เสร็จ':'รอ';
-    var gttMin=(s.rate*ivSet)/60;
-    return '<div style="background:var(--surface2);border:1.5px solid var(--border2);border-radius:11px;padding:11px 13px;margin-bottom:8px;'+(isCur?'border-color:var(--green);background:var(--green-dim);':isDone?'opacity:.5;':'')+'"><div style="display:flex;align-items:center;gap:8px;margin-bottom:5px;"><div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;background:'+(isCur?'var(--green-dim)':isDone?'var(--surface)':'var(--blue-dim)')+';color:'+(isCur?'var(--green)':isDone?'var(--muted)':'var(--blue)')+';">'+(i+1)+'</div><span style="font-size:14px;font-weight:600;flex:1;">'+s.name+'</span><span style="font-size:11px;padding:2px 8px;border-radius:99px;font-weight:600;'+(isCur?'background:var(--green-dim);color:var(--green);border:1px solid var(--green);':isDone?'background:var(--surface2);color:var(--muted);border:1px solid var(--border2);':'background:var(--surface);color:var(--muted);border:1px solid var(--border2);')+'">'+stTxt+'</span></div><div style="font-size:12px;color:var(--muted);">'+s.vol+' mL · '+s.rate+' mL/ชม. · '+Math.round(gttMin)+' gtt/min · '+(s.vol/s.rate).toFixed(1)+' ชม./ขวด</div></div>';
-  }).join('');
+// ── Metronome ──────────────────────────────────────────────
+var isMetroOn=false, metroBeat=0, metroTimer=null, soundMOn=true, countOn=true, volM=0.7;
+function toggleMetro(){if(isMetroOn)stopMetro();else startMetro();}
+function startMetro(){
+  if(targetSec<=0){calculate();if(targetSec<=0)return;}
+  isMetroOn=true; metroBeat=0;
+  document.getElementById('metroBtn').textContent='หยุดจังหวะ';
+  document.getElementById('beatInfo').textContent=Math.round(60/targetSec)+' gtt/min · '+targetSec.toFixed(1)+' วิ/หยด';
+  scheduleBeat();
 }
-
-function toggleRun(){if(waitingForNext)startNextBottle();else if(isRunning)stopRun();else startRun();}
-function startRun(){var seq=buildRunSeq();if(seq.length===0){alert('กรุณาเพิ่มสารน้ำก่อน');return;}isRunning=true;currentBottleIdx=0;document.getElementById('runBtn').textContent='หยุดชั่วคราว';startBottle(seq[0],0,seq.length);}
-function startBottle(b,idx,total){
-  bottleBeat=0;
-  var gttMin=(b.rate*ivSet)/60, spd=60/gttMin;
-  bottleDropTotal=Math.round(b.vol*ivSet);
-  document.getElementById('curName').textContent='ขวดที่ '+(idx+1)+'/'+total+' — '+b.name;
-  document.getElementById('curTime').textContent=b.rate+' mL/ชม. · '+b.vol+' mL';
-  document.getElementById('runPanelTitle').textContent='ขวดที่ '+(idx+1)+' / '+total;
-  document.getElementById('beatInfo').textContent=Math.round(gttMin)+' gtt/min · '+spd.toFixed(1)+' วิ/หยด';
-  document.getElementById('nextAlert').style.display='none';
-  speakTh('เริ่มขวดที่ '+(idx+1));
-  renderRunStatus();
-  scheduleBeat(spd,bottleDropTotal,total);
+function stopMetro(){
+  isMetroOn=false; clearTimeout(metroTimer);
+  document.getElementById('metroBtn').textContent='เริ่มจังหวะ';
+  document.getElementById('beatNum').textContent='—';
+  document.getElementById('beatInfo').textContent='กด "เริ่มจังหวะ" เพื่อเริ่ม';
+  var fill=document.getElementById('cntFill');fill.style.transition='none';fill.style.width='100%';
 }
-function scheduleBeat(spd,dropTotal,total){
-  if(!isRunning)return;
+function resetMetro(){stopMetro();metroBeat=0;}
+function scheduleBeat(){
+  if(!isMetroOn)return;
   var fill=document.getElementById('cntFill');
   fill.style.transition='none';fill.style.width='100%';
-  setTimeout(function(){fill.style.transition='width '+spd.toFixed(2)+'s linear';fill.style.width='0%';},30);
-  beatTimeout=setTimeout(function(){
-    if(!isRunning)return;
-    bottleBeat++;
+  setTimeout(function(){fill.style.transition='width '+targetSec.toFixed(2)+'s linear';fill.style.width='0%';},30);
+  metroTimer=setTimeout(function(){
+    if(!isMetroOn)return;
+    metroBeat++;
     var ring=document.getElementById('beatRing');
     ring.classList.add('flash');setTimeout(function(){ring.classList.remove('flash');},120);
-    document.getElementById('beatNum').textContent=bottleBeat;
+    document.getElementById('beatNum').textContent=metroBeat;
     if(soundMOn)tone(880,440,.09,volM*.35);
-    if(countOn)speakTh(String(bottleBeat));
-    var pct=Math.min(100,Math.round(bottleBeat/dropTotal*100));
-    document.getElementById('bottleProgress').textContent='หยดที่ '+bottleBeat+' / '+dropTotal;
-    document.getElementById('bottlePct').textContent=pct+'%';
-    document.getElementById('bottlePctBar').style.width=pct+'%';
-    var seq=buildRunSeq(),spd2=60/((seq[currentBottleIdx].rate*ivSet)/60),left=(dropTotal-bottleBeat)*spd2;
-    if(left<=900&&left>900-spd2){document.getElementById('nextAlert').style.display='block';if(currentBottleIdx+1<seq.length)document.getElementById('nextAlertSub').textContent='เตรียม "'+seq[currentBottleIdx+1].name+'"';tone(440,null,.3,.25);}
-    if(bottleBeat>=dropTotal)bottleFinished(total);
-    else scheduleBeat(spd,dropTotal,total);
-  },spd*1000);
+    speakTh(String(metroBeat));
+    scheduleBeat();
+  },targetSec*1000);
 }
-function bottleFinished(total){
-  var seq=buildRunSeq();currentBottleIdx++;
-  if(currentBottleIdx>=seq.length){allDone();}
-  else{
-    waitingForNext=true;isRunning=false;
-    document.getElementById('runBtn').textContent='▶ เริ่มขวดถัดไป';
-    document.getElementById('beatNum').textContent='✓';
-    document.getElementById('nextAlert').style.display='block';
-    document.getElementById('nextAlertSub').textContent='ขวดถัดไป: "'+seq[currentBottleIdx].name+'" · กดเริ่ม';
-    renderRunStatus();
-    [523,659,784].forEach(function(f,i){setTimeout(function(){tone(f,null,.25,volM*.25);},i*150);});
-    speakTh('ขวดที่ '+currentBottleIdx+' หมดแล้ว เตรียมขวดถัดไป');
-    showBanner('ขวดที่ '+currentBottleIdx+' หมดแล้ว! กดปุ่มเพื่อเริ่มขวดถัดไป');
-  }
-}
-function startNextBottle(){waitingForNext=false;isRunning=true;document.getElementById('runBtn').textContent='หยุดชั่วคราว';document.getElementById('nextAlert').style.display='none';var seq=buildRunSeq();startBottle(seq[currentBottleIdx],currentBottleIdx,seq.length);}
-function allDone(){isRunning=false;waitingForNext=false;clearTimeout(beatTimeout);document.getElementById('runBtn').textContent='✓ ครบทุกขวดแล้ว';document.getElementById('runBtn').disabled=true;document.getElementById('beatNum').textContent='✓';document.getElementById('runPanelTitle').textContent='ให้สารน้ำครบแล้ว';renderRunStatus();[523,659,784,1047].forEach(function(f,i){setTimeout(function(){tone(f,null,.3,volM*.25);},i*140);});speakTh('ให้สารน้ำครบทุกขวดแล้ว');showBanner('✅ ให้สารน้ำครบทุกขวดแล้ว!');}
-function stopRun(){isRunning=false;waitingForNext=false;clearTimeout(beatTimeout);document.getElementById('runBtn').textContent='เริ่มให้สารน้ำ';document.getElementById('runBtn').disabled=false;document.getElementById('cntFill').style.transition='none';document.getElementById('cntFill').style.width='100%';}
-function resetRun(){stopRun();currentBottleIdx=0;bottleBeat=0;document.getElementById('beatNum').textContent='—';document.getElementById('bottleProgress').textContent='ขวดที่ — / —';document.getElementById('bottlePct').textContent='0%';document.getElementById('bottlePctBar').style.width='0%';document.getElementById('nextAlert').style.display='none';renderRunStatus();}
-function showBanner(msg){var b=document.createElement('div');b.style.cssText='position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:9999;background:#cf222e;color:#fff;padding:12px 20px;border-radius:12px;font-size:15px;font-weight:600;font-family:"IBM Plex Sans Thai",sans-serif;box-shadow:0 4px 20px rgba(0,0,0,.4);max-width:90vw;text-align:center;cursor:pointer;';b.textContent=msg;b.onclick=function(){if(b.parentNode)b.parentNode.removeChild(b);};document.body.appendChild(b);setTimeout(function(){if(b.parentNode)b.parentNode.removeChild(b);},8000);}
 function toggleSoundM(){soundMOn=!soundMOn;document.getElementById('togM').classList.toggle('on',soundMOn);document.getElementById('lblM').textContent=soundMOn?'เปิด':'ปิด';}
 function toggleCount(){countOn=!countOn;document.getElementById('togCount').classList.toggle('on',countOn);document.getElementById('lblCount').textContent=countOn?'เปิด':'ปิด';}
 function updateVolM(){volM=+document.getElementById('sVolM').value;document.getElementById('vVolM').textContent=Math.round(volM*100)+'%';}
 
-// ══ CAMERA ═════════════════════════════════════════════════
+// ── Camera ──────────────────────────────────────────────────
 var THRESH=25,COOLDOWN=500,ROI_SIZE=70,BLUR_R=1;
-var isCamOn=false,camDropCount=0,lastDropMs=0,prevGray=null,camDropTimes=[];
+var isCamOn=false,camDrops=0,lastDropMs=0,prevGray=null,dropTimes=[];
 var camRafId=null,isCalib=false,calibBuf=[],calibRafId=null;
 var camStream=null,facingMode='environment',roiX=0,roiY=0,roiSet=false;
 var soundCOn=true,volC=0.7,graphBuf=new Array(300).fill(0),fpsArr=[],lastFpsT=0;
 var vid=document.getElementById('vid'),cvOv=document.getElementById('cvOverlay'),cvPr=document.getElementById('cvProc'),cvGr=document.getElementById('cvGraph');
 var octx=cvOv.getContext('2d'),pctx=cvPr.getContext('2d',{willReadFrequently:true}),gctx=cvGr.getContext('2d');
+
 function openCamera(){navigator.mediaDevices.getUserMedia({video:{facingMode:facingMode,width:{ideal:1280},height:{ideal:720}}}).then(function(s){camStream=s;vid.srcObject=s;vid.className=facingMode==='user'?'':'rear';vid.onloadedmetadata=function(){cvPr.width=vid.videoWidth;cvPr.height=vid.videoHeight;cvOv.width=vid.videoWidth;cvOv.height=vid.videoHeight;roiX=Math.floor(vid.videoWidth/2);roiY=Math.floor(vid.videoHeight/2);roiSet=true;drawROI(false);document.getElementById('placeholder').style.display='none';document.getElementById('calibBtn').disabled=false;};document.getElementById('btnOpen').disabled=true;document.getElementById('btnClose').disabled=false;document.getElementById('btnFlip').disabled=false;}).catch(function(e){alert('ไม่สามารถเปิดกล้องได้\n'+e.message);});}
 function flipCamera(){facingMode=facingMode==='environment'?'user':'environment';closeCamera(true);setTimeout(openCamera,300);}
-function closeCamera(s){if(camStream){camStream.getTracks().forEach(function(t){t.stop();});camStream=null;}vid.srcObject=null;if(!s)stopCamMonitor();roiSet=false;octx.clearRect(0,0,cvOv.width,cvOv.height);document.getElementById('placeholder').style.display='flex';document.getElementById('btnOpen').disabled=false;document.getElementById('btnClose').disabled=true;document.getElementById('btnFlip').disabled=true;document.getElementById('calibBtn').disabled=true;}
+function closeCamera(s){if(camStream){camStream.getTracks().forEach(function(t){t.stop();});camStream=null;}vid.srcObject=null;if(!s)stopCam();roiSet=false;octx.clearRect(0,0,cvOv.width,cvOv.height);document.getElementById('placeholder').style.display='flex';document.getElementById('btnOpen').disabled=false;document.getElementById('btnClose').disabled=true;document.getElementById('btnFlip').disabled=true;document.getElementById('calibBtn').disabled=true;}
 cvOv.addEventListener('click',function(e){if(!roiSet)return;var r=cvOv.getBoundingClientRect();roiX=Math.round((e.clientX-r.left)*cvOv.width/r.width);roiY=Math.round((e.clientY-r.top)*cvOv.height/r.height);prevGray=null;drawROI(false);});
 function drawROI(flash){octx.clearRect(0,0,cvOv.width,cvOv.height);var h=Math.floor(ROI_SIZE/2),x=roiX-h,y=roiY-h,s=ROI_SIZE;octx.fillStyle='rgba(0,0,0,0.32)';octx.fillRect(0,0,cvOv.width,cvOv.height);octx.clearRect(x,y,s,s);octx.strokeStyle=flash?'#f85149':'#2f81f7';octx.lineWidth=2.5;octx.strokeRect(x,y,s,s);var tc=14;octx.strokeStyle='#fff';octx.lineWidth=2;[[x,y,1,1],[x+s,y,-1,1],[x,y+s,1,-1],[x+s,y+s,-1,-1]].forEach(function(c){octx.beginPath();octx.moveTo(c[0],c[1]);octx.lineTo(c[0]+tc*c[2],c[1]);octx.stroke();octx.beginPath();octx.moveTo(c[0],c[1]);octx.lineTo(c[0],c[1]+tc*c[3]);octx.stroke();});octx.fillStyle=flash?'rgba(248,81,73,0.88)':'rgba(47,129,247,0.88)';octx.beginPath();if(octx.roundRect)octx.roundRect(x,y-26,80,22,4);else octx.rect(x,y-26,80,22);octx.fill();octx.fillStyle='#fff';octx.font='12px IBM Plex Mono,monospace';octx.fillText('ROI '+ROI_SIZE+'px',x+8,y-10);}
 function boxBlur(src,w,h,r){if(r<1)return src;var dst=new Float32Array(src.length),sz=2*r+1;for(var row=0;row<h;row++){var sum=0;for(var c=0;c<sz;c++)sum+=src[row*w+Math.min(c,w-1)];for(var col=0;col<w;col++){dst[row*w+col]=sum/sz;sum+=src[row*w+Math.min(col+r+1,w-1)]-src[row*w+Math.max(col-r,0)];}}var dst2=new Float32Array(src.length);for(var col=0;col<w;col++){var sum=0;for(var r2=0;r2<sz;r2++)sum+=dst[Math.min(r2,h-1)*w+col];for(var row=0;row<h;row++){dst2[row*w+col]=sum/sz;sum+=dst[Math.min(row+r+1,h-1)*w+col]-dst[Math.max(row-r,0)*w+col];}}return dst2;}
 function getROIDiff(){if(!vid.readyState||vid.readyState<2)return null;pctx.drawImage(vid,0,0,cvPr.width,cvPr.height);var h2=Math.floor(ROI_SIZE/2),rx=Math.max(0,roiX-h2),ry=Math.max(0,roiY-h2),rs=Math.min(ROI_SIZE,cvPr.width-rx,cvPr.height-ry);if(rs<4)return null;var data=pctx.getImageData(rx,ry,rs,rs).data,n=rs*rs,gray=new Float32Array(n);for(var i=0;i<n;i++)gray[i]=data[i*4]*.299+data[i*4+1]*.587+data[i*4+2]*.114;if(BLUR_R>0)gray=boxBlur(gray,rs,rs,BLUR_R);return{gray:gray,n:n};}
-function startCalib(){if(!roiSet){alert('กรุณาเปิดกล้องก่อน');return;}isCalib=true;calibBuf=[];prevGray=null;document.getElementById('calibBtn').disabled=true;document.getElementById('calibBtn').textContent='กำลัง Calibrate...';document.getElementById('calibStatus').textContent='กำลังเรียนรู้... 0%';var start=Date.now(),pCG=null;function loop(){if(!isCalib)return;document.getElementById('calibStatus').textContent='กำลังเรียนรู้... '+Math.min(100,Math.round((Date.now()-start)/15000*100))+'%';var res=getROIDiff();if(res){if(pCG&&pCG.length===res.n){var s=0;for(var i=0;i<res.n;i++)s+=Math.abs(res.gray[i]-pCG[i]);calibBuf.push(s/res.n);}pCG=res.gray;}if(Date.now()-start>=15000)finishCalib();else calibRafId=requestAnimationFrame(loop);}calibRafId=requestAnimationFrame(loop);}
+function startCalib(){if(!roiSet){alert('กรุณาเปิดกล้องก่อน');return;}isCalib=true;calibBuf=[];prevGray=null;document.getElementById('calibBtn').disabled=true;document.getElementById('calibBtn').textContent='กำลัง Calibrate...';var el=document.getElementById('calibStatus'),start=Date.now(),pCG=null;function loop(){if(!isCalib)return;el.textContent='กำลังเรียนรู้... '+Math.min(100,Math.round((Date.now()-start)/15000*100))+'%';var res=getROIDiff();if(res){if(pCG&&pCG.length===res.n){var s=0;for(var i=0;i<res.n;i++)s+=Math.abs(res.gray[i]-pCG[i]);calibBuf.push(s/res.n);}pCG=res.gray;}if(Date.now()-start>=15000)finishCalib();else calibRafId=requestAnimationFrame(loop);}calibRafId=requestAnimationFrame(loop);}
 function finishCalib(){isCalib=false;if(calibBuf.length<10){document.getElementById('calibStatus').textContent='ข้อมูลไม่เพียงพอ';document.getElementById('calibBtn').disabled=false;document.getElementById('calibBtn').textContent='เริ่ม Calibrate';return;}var sorted=calibBuf.slice().sort(function(a,b){return a-b;}),cut=Math.floor(sorted.length*.7),base=sorted.slice(0,cut),noiseAvg=base.reduce(function(a,b){return a+b;})/base.length,noiseMax=base[base.length-1],peaks=sorted.slice(cut),peakAvg=peaks.length?peaks.reduce(function(a,b){return a+b;})/peaks.length:noiseMax*3,auto=Math.max(5,Math.min(80,Math.round(Math.max(noiseMax*1.8,(noiseAvg+peakAvg)/2))));THRESH=auto;document.getElementById('sThresh').value=THRESH;document.getElementById('vThresh').textContent=THRESH;document.getElementById('threshLine').textContent='threshold: '+THRESH;document.getElementById('calibStatus').textContent='✓ สำเร็จ! Threshold = '+THRESH;document.getElementById('calibBtn').disabled=false;document.getElementById('calibBtn').textContent='เริ่ม Calibrate ใหม่';prevGray=null;}
-function camFrame(ts){if(!isCamOn||!vid.readyState||vid.readyState<2){camRafId=requestAnimationFrame(camFrame);return;}fpsArr.push(ts);while(fpsArr.length>30&&fpsArr[0]<ts-1000)fpsArr.shift();if(ts-lastFpsT>500){document.getElementById('fpsLabel').textContent=fpsArr.length+' fps';lastFpsT=ts;}var res=getROIDiff();if(!res){camRafId=requestAnimationFrame(camFrame);return;}var avgDiff=0;if(prevGray&&prevGray.length===res.n){var s=0;for(var i=0;i<res.n;i++)s+=Math.abs(res.gray[i]-prevGray[i]);avgDiff=s/res.n;}graphBuf.push(avgDiff);if(graphBuf.length>300)graphBuf.shift();drawGraph(avgDiff);var now=Date.now();if(avgDiff>THRESH&&(now-lastDropMs)>COOLDOWN){lastDropMs=now;camDropCount++;camDropTimes.push(now);if(camDropTimes.length>12)camDropTimes.shift();if(soundCOn)tone(900,420,.10,volC*.35);document.getElementById('camDropCount').textContent=camDropCount.toLocaleString();updateCamRate();drawROI(true);setTimeout(function(){if(roiSet)drawROI(false);},140);}prevGray=res.gray;camRafId=requestAnimationFrame(camFrame);}
+function camFrame(ts){if(!isCamOn||!vid.readyState||vid.readyState<2){camRafId=requestAnimationFrame(camFrame);return;}fpsArr.push(ts);while(fpsArr.length>30&&fpsArr[0]<ts-1000)fpsArr.shift();if(ts-lastFpsT>500){document.getElementById('fpsLabel').textContent=fpsArr.length+' fps';lastFpsT=ts;}var res=getROIDiff();if(!res){camRafId=requestAnimationFrame(camFrame);return;}var avgDiff=0;if(prevGray&&prevGray.length===res.n){var s=0;for(var i=0;i<res.n;i++)s+=Math.abs(res.gray[i]-prevGray[i]);avgDiff=s/res.n;}graphBuf.push(avgDiff);if(graphBuf.length>300)graphBuf.shift();drawGraph(avgDiff);var now=Date.now();if(avgDiff>THRESH&&(now-lastDropMs)>COOLDOWN){lastDropMs=now;camDrops++;dropTimes.push(now);if(dropTimes.length>12)dropTimes.shift();if(soundCOn)tone(900,420,.10,volC*.35);document.getElementById('camDropCount').textContent=camDrops.toLocaleString();updateCamRate();drawROI(true);setTimeout(function(){if(roiSet)drawROI(false);},140);}prevGray=res.gray;camRafId=requestAnimationFrame(camFrame);}
 function drawGraph(latest){var W=cvGr.clientWidth||400,H=64;if(cvGr.width!==W)cvGr.width=W;cvGr.height=H;gctx.clearRect(0,0,W,H);var mx=1;for(var i=0;i<graphBuf.length;i++)if(graphBuf[i]>mx)mx=graphBuf[i];var scale=(H-8)/Math.max(mx,THRESH*2),ty=H-THRESH*scale;gctx.setLineDash([4,4]);gctx.strokeStyle=isDark?'rgba(227,179,65,0.55)':'rgba(154,103,0,0.55)';gctx.lineWidth=1;gctx.beginPath();gctx.moveTo(0,ty);gctx.lineTo(W,ty);gctx.stroke();gctx.setLineDash([]);var step=W/Math.max(graphBuf.length-1,1);gctx.beginPath();gctx.strokeStyle=isDark?'#2f81f7':'#0969da';gctx.lineWidth=1.5;for(var i=0;i<graphBuf.length;i++){var px=i*step,py=H-graphBuf[i]*scale;i===0?gctx.moveTo(px,py):gctx.lineTo(px,py);}gctx.stroke();gctx.lineTo(W,H);gctx.lineTo(0,H);gctx.closePath();gctx.fillStyle=isDark?'rgba(47,129,247,0.08)':'rgba(9,105,218,0.07)';gctx.fill();if(latest>THRESH){gctx.beginPath();gctx.arc(W-3,H-latest*scale,5,0,Math.PI*2);gctx.fillStyle=isDark?'#f85149':'#cf222e';gctx.fill();}}
-function toggleCamMonitor(){if(isCamOn)stopCamMonitor();else startCamMonitor();}
-function startCamMonitor(){if(!roiSet){alert('กรุณาเปิดกล้องก่อน');return;}isCamOn=true;prevGray=null;lastDropMs=0;camDropTimes=[];document.getElementById('btnCamStart').textContent='หยุดตรวจจับ';camRafId=requestAnimationFrame(camFrame);}
-function stopCamMonitor(){isCamOn=false;if(camRafId){cancelAnimationFrame(camRafId);camRafId=null;}var btn=document.getElementById('btnCamStart');if(btn)btn.textContent='เริ่มตรวจจับ';}
-function resetCam(){stopCamMonitor();camDropCount=0;camDropTimes=[];prevGray=null;document.getElementById('camDropCount').textContent='0';document.getElementById('camRateInfo').textContent='';graphBuf.fill(0);}
-function updateCamRate(){if(camDropTimes.length<3){document.getElementById('camRateInfo').textContent='';return;}var span=(camDropTimes[camDropTimes.length-1]-camDropTimes[0])/1000,live=(camDropTimes.length-1)/span*60;document.getElementById('camRateInfo').textContent='อัตราจริง: '+live.toFixed(1)+' gtt/min';}
+function toggleCam(){if(isCamOn)stopCam();else startCam();}
+function startCam(){if(!roiSet){alert('กรุณาเปิดกล้องก่อน');return;}isCamOn=true;prevGray=null;lastDropMs=0;dropTimes=[];document.getElementById('btnCamStart').textContent='หยุดตรวจจับ';camRafId=requestAnimationFrame(camFrame);}
+function stopCam(){isCamOn=false;if(camRafId){cancelAnimationFrame(camRafId);camRafId=null;}var b=document.getElementById('btnCamStart');if(b)b.textContent='เริ่มตรวจจับ';}
+function resetCam(){stopCam();camDrops=0;dropTimes=[];prevGray=null;document.getElementById('camDropCount').textContent='0';document.getElementById('camRateInfo').textContent='';graphBuf.fill(0);}
+function updateCamRate(){if(dropTimes.length<3)return;var span=(dropTimes[dropTimes.length-1]-dropTimes[0])/1000,live=(dropTimes.length-1)/span*60;document.getElementById('camRateInfo').textContent='อัตราจริง: '+live.toFixed(1)+' gtt/min';}
 function updateThresh(){THRESH=+document.getElementById('sThresh').value;document.getElementById('vThresh').textContent=THRESH;document.getElementById('threshLine').textContent='threshold: '+THRESH;}
 function updateCooldown(){COOLDOWN=+document.getElementById('sCooldown').value;document.getElementById('vCooldown').textContent=COOLDOWN;}
 function updateROISize(){ROI_SIZE=+document.getElementById('sROI').value;document.getElementById('vROI').textContent=ROI_SIZE;if(roiSet)drawROI(false);}
 function updateBlur(){BLUR_R=+document.getElementById('sBlur').value;document.getElementById('vBlur').textContent=BLUR_R;}
 function toggleSoundC(){soundCOn=!soundCOn;document.getElementById('togC').classList.toggle('on',soundCOn);document.getElementById('lblC').textContent=soundCOn?'เปิด':'ปิด';}
 function updateVolC(){volC=+document.getElementById('sVolC').value;document.getElementById('vVolC').textContent=Math.round(volC*100)+'%';}
-
-// ── Load plan from patient page ───────────────────────────
-(function(){
-  try{
-    var d=sessionStorage.getItem('iv_run_plan');
-    if(d){
-      var p=JSON.parse(d);
-      if(p&&p.fluids&&p.fluids.length){
-        runFluids=p.fluids;
-        renderRunFluidList();
-        document.getElementById('planBanner').style.display='flex';
-        document.getElementById('planBannerName').textContent='แผนของ: '+p.patientName;
-        sessionStorage.removeItem('iv_run_plan');
-        // switch to calc tab
-        switchTab('calc');
-      }
-    }
-  }catch(e){}
-})();
 
 function updateClock(){document.getElementById('clockTxt').textContent=new Date().toLocaleTimeString('th-TH');}
 setInterval(updateClock,1000);updateClock();
